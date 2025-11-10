@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Coconut Problem 🥥</title>
+    <!-- Load Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Use the Inter font family -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- ADD TONE.JS for sound effects -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* This will be our animation! We set the duration in JavaScript */
+        #coconut {
+            transition: top linear, left linear;
+        }
+        
+        /* Some fun wind lines */
+        .wind {
+            position: absolute;
+            top: 140px;
+            width: 100px;
+            height: 2px;
+            background-color: rgb(156 163 175); /* gray-400 */
+            border-radius: 2px;
+            opacity: 0;
+            animation: blow 1.5s linear infinite;
+        }
+        .wind.two { top: 160px; animation-delay: -0.5s; }
+        .wind.three { top: 180px; animation-delay: -1s; }
+
+        @keyframes blow {
+            0% { transform: translateX(-100px); opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { transform: translateX(500px); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="bg-sky-100 flex items-center justify-center min-h-screen p-4">
+
+    <div class="w-full max-w-3xl bg-white p-6 md:p-8 rounded-2xl shadow-xl">
+        <h1 class="text-3xl font-bold text-center text-yellow-900 mb-4">The Coconut Problem 🥥</h1>
+        <p class="text-center text-gray-600 mb-6">How fast does the wind need to blow?</p>
+
+        <!-- Animation Scene -->
+        <div id="scene" class="relative w-full h-[450px] bg-gradient-to-b from-sky-300 to-sky-100 rounded-lg overflow-hidden border-4 border-gray-200">
+            <!-- Ground -->
+            <div class="absolute bottom-0 left-0 w-full h-1/4 bg-green-500"></div>
+            
+            <!-- Tree -->
+            <div id="tree-trunk" class="absolute bottom-[90px] left-[100px] w-8 h-[300px] bg-yellow-900 rounded-t-lg"></div>
+            <!-- Tree Leaves (Fixed) -->
+            <div id="tree-leaves" class="absolute top-[30px] left-[60px] w-[120px] h-[90px]">
+                <div class="absolute w-20 h-10 bg-green-700 rounded-full -rotate-30 top-4 left-0"></div>
+                <div class="absolute w-20 h-10 bg-green-600 rounded-full rotate-30 top-4 right-0"></div>
+                <div class="absolute w-20 h-10 bg-green-700 rounded-full top-10 left-4"></div>
+            </div>
+
+            <!-- Coconut -->
+            <div id="coconut" class="absolute top-[100px] left-[118px] w-6 h-6 bg-yellow-700 rounded-full border-2 border-yellow-800 z-10"></div>
+            
+            <!-- Person -->
+            <div id="person-body" class="absolute bottom-[90px] left-[260px] w-6 h-16 bg-blue-600 rounded-t-full"></div>
+            <div id="person-head" class="absolute bottom-[154px] left-[258px] w-10 h-10 bg-pink-300 rounded-full border-2 border-gray-800"></div>
+
+            <!-- Labels -->
+            <div class="absolute bottom-[90px] left-[140px] text-sm font-semibold text-black p-1 bg-white/70 rounded flex items-center">
+                <div class="w-[60px] h-0.5 bg-black mr-2"></div> <!-- Line -->
+                10 feet
+            </div>
+            <div class="absolute left-0 top-[240px] w-[100px] text-right pr-2 text-sm font-semibold text-black p-1">
+                30 feet
+                <!-- Vertical line would be complex, text is clear -->
+            </div>
+            
+            <!-- Wind Lines (hidden initially) -->
+            <div id="wind-container" class="hidden">
+                <div class="wind one"></div>
+                <div class="wind two"></div>
+                <div class="wind three"></div>
+            </div>
+
+        </div>
+
+        <!-- Controls -->
+        <div class="flex flex-col sm:flex-row gap-4 mt-6">
+            <button id="btnSolve" class="flex-1 bg-green-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-green-700 transition-all text-lg">
+                Solve!
+            </button>
+            <button id="btnReset" class="flex-1 bg-gray-500 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-gray-600 transition-all text-lg">
+                Reset
+            </button>
+        </div>
+
+        <!-- Explanation Box -->
+        <div id="explanation" class="mt-6 p-5 bg-gray-100 rounded-lg border border-gray-300 min-h-[100px]">
+            <p class="text-gray-700 text-lg">Click "Solve!" to see the answer and watch the animation.</p>
+        </div>
+    </div>
+
+    <script>
+        // Get all the elements we need to play with
+        const coconut = document.getElementById('coconut');
+        const personHead = document.getElementById('person-head'); 
+        const btnSolve = document.getElementById('btnSolve'); 
+        const btnReset = document.getElementById('btnReset'); 
+        const explanation = document.getElementById('explanation'); 
+        const windContainer = document.getElementById('wind-container');
+
+        let windSound, windFilter; // For our Tone.js wind sound effect
+        
+        // --- The Problem's Numbers ---
+        const H_FEET = 30; // 30 feet tall tree
+        const D_FEET = 10; // 10 feet away
+        const G_FPS = 32.2; // Gravity in feet/per/second^2
+        const M_KG = 2; // The 2kg coconut weight
+        
+        // --- Animation Scaling ---
+        // These are the starting CSS positions of the coconut
+        const COCONUT_START_TOP = 100; // in px
+        const COCONUT_START_LEFT = 118; // in px
+        
+        // Let's figure out where everything is in pixels
+        // We calculate the target *after* the page has loaded all elements
+        const HEAD_TARGET_TOP = personHead.offsetTop;
+        const HEAD_TARGET_LEFT = personHead.offsetLeft + personHead.offsetWidth / 2 - coconut.offsetWidth / 2; // Center of head
+
+        // --- The Physics Calculation ---
+        
+        // 1. How long does it take to fall 30 feet? (Vertical motion)
+        // We use the formula: d = v₀t + (1/2)gt²
+        // Since v₀ (initial vertical velocity) is 0, it simplifies to:
+        // d = (1/2)gt²  =>  t² = 2d / g  =>  t = sqrt(2d / g)
+        const timeToFall = Math.sqrt((2 * H_FEET) / G_FPS);
+        
+        // 2. How fast must the wind blow to cover 10 feet in *that exact time*?
+        // (Horizontal motion)
+        // We use the formula: distance = speed * time
+        // So, v = d / t
+        const windSpeed = D_FEET / timeToFall;
+
+        // --- NEW CONVERSION ---
+        // 1 foot = 0.3048 meters
+        const windSpeed_mps = windSpeed * 0.3048; // Convert ft/s to m/s
+        
+        // --- Button Functions ---
+
+        function solveProblem() {
+            // Start the audio context on a user click, IF Tone.js is loaded
+            // We also wrap in a try...catch so a sound error can't stop the animation
+            if (typeof Tone !== 'undefined') {
+                try {
+                    Tone.start();
+
+                    // Create a wind sound effect
+                    if (!windSound) {
+                        windSound = new Tone.Noise("pink").toDestination();
+                        windFilter = new Tone.AutoFilter({
+                            frequency: "8n",
+                            baseFrequency: 400,
+                            octaves: 4
+                        }).toDestination();
+                        windSound.connect(windFilter);
+                    }
+                    
+                    windSound.start();
+                    windFilter.start();
+                } catch (e) {
+                    console.error("Tone.js failed to start:", e);
+                    // Don't let a sound error stop the animation
+                }
+            }
+
+
+            // 1. Show the explanation
+            explanation.innerHTML = `
+                <h3 class="font-bold text-xl mb-3 text-indigo-700">Here's the solution:</h3>
+                
+                <div class="mb-4 p-3 bg-yellow-100 border border-yellow-300 rounded-lg">
+                    <h4 class="font-bold text-yellow-800">First, our assumptions:</h4>
+                    <ul class="list-disc list-inside text-sm text-yellow-700 mt-1">
+                        <li>We ignore air resistance (drag) on the coconut.</li>
+                        <li>The coconut starts falling from a complete stop (zero vertical speed).</li>
+                        <li>The wind blows at one constant speed (no gusts).</li>
+                        <li>The 30ft is the full vertical drop, and 10ft is the full horizontal distance.</li>
+                    </ul>
+                </div>
+
+                <p class="mb-2">This is a 2-part problem. We solve for <strong>time</strong> first, then <strong>speed</strong>.</p>
+                <ol class="list-decimal list-inside space-y-4">
+                    <li>
+                        <strong>How long does it take to fall? (Vertical Motion)</strong>
+                        <p class="text-sm my-1">We use the physics equation for falling objects:</p>
+                        <span class="font-mono text-sm bg-gray-200 px-2 py-1 rounded">d = v₀t + (1/2)gt²</span>
+                        <ul class="list-disc list-inside text-sm text-gray-600 ml-4 mt-1">
+                            <li><strong>d</strong> = distance (30 ft)</li>
+                            <li><strong>v₀</strong> = initial vertical speed (0, since it's just falling)</li>
+                            <li><strong>g</strong> = acceleration due to gravity (32.2 ft/s²)</li>
+                            <li><strong>t</strong> = time (this is what we want to find!)</li>
+                        </ul>
+                        <p class="text-sm mt-1">So, $30 = 0 \cdot t + \frac{1}{2} \cdot 32.2 \cdot t²$. Let's solve for 't':</p>
+                        <span class="font-mono text-sm bg-gray-200 px-2 py-1 rounded">t = sqrt( (2 * 30 ft) / 32.2 ft/s² ) = <strong>${timeToFall.toFixed(3)} seconds</strong></span>
+                        <br><span class="text-sm font-semibold text-red-600 mt-1 block">(Surprise! The 2kg weight doesn't matter for this part!)</span>
+                    </li>
+                    <li>
+                        <strong>How fast must the wind blow? (Horizontal Motion)</strong>
+                        <p class="text-sm my-1">We use the simple equation for constant speed:</p>
+                        <span class="font-mono text-sm bg-gray-200 px-2 py-1 rounded">distance = speed × time</span>
+                        <p class="text-sm mt-1">The wind must push the coconut 10 ft sideways in that <em>exact same</em> ${timeToFall.toFixed(3)} seconds.</p>
+                        <span class="font-mono text-sm bg-gray-200 px-2 py-1 rounded">Speed = 10 ft / ${timeToFall.toFixed(3)} s = <strong>${windSpeed.toFixed(3)} ft/s</strong></span>
+                        <br>
+                        <span class="font-mono text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded mt-1 inline-block">In meters: <strong>${windSpeed_mps.toFixed(3)} m/s</strong></span>
+                    </li>
+                </ol>
+                <p class="font-bold text-lg mt-4 text-green-700">
+                    So, the wind must blow at ~${windSpeed.toFixed(2)} feet per second.
+                    <br>
+                    <span class="text-blue-700">(That's ~${windSpeed_mps.toFixed(2)} meters per second!)</span>
+                    <br>
+                    Now, watch!
+                </p>
+                <p class="text-center italic text-gray-600 mt-4 text-lg">
+                    "The answer, my friend... is blowin' in the wind" 🎶
+                </p>
+            `;
+            
+            // 2. Show the wind
+            windContainer.classList.remove('hidden');
+
+            // 3. Set the animation properties
+            // We set the *duration* of the animation to be the *exact* time it takes to fall.
+            coconut.style.transitionDuration = `${timeToFall}s`;
+            
+            // 4. Set the final position for the coconut (the person's head)
+            // This tells the CSS *where* to animate to.
+            coconut.style.top = `${HEAD_TARGET_TOP}px`;
+            coconut.style.left = `${HEAD_TARGET_LEFT}px`;
+            
+            // 5. Disable the button so we can't click it mid-animation
+            btnSolve.disabled = true;
+            btnSolve.classList.add('opacity-50', 'cursor-not-allowed');
+
+            // Stop the sound just after the animation finishes
+            // Only if Tone was loaded and sound was created
+            if (typeof Tone !== 'undefined' && windSound && windFilter) {
+                setTimeout(() => {
+                    try {
+                        if (windSound) windSound.stop();
+                        if (windFilter) windFilter.stop();
+                    } catch (e) {
+                        console.error("Tone.js stop error:", e);
+                    }
+                }, timeToFall * 1000 + 500); // Stop 0.5s after it lands
+            }
+        }
+
+        function resetProblem() {
+            // Stop the sound if it's playing (and if Tone was loaded)
+            if (typeof Tone !== 'undefined' && windSound && windFilter) {
+                try {
+                    if (windSound) windSound.stop();
+                    if (windFilter) windFilter.stop();
+                } catch (e) {
+                    console.error("Tone.js error during reset:", e);
+                }
+            }
+
+            // 1. Reset the explanation text
+            explanation.innerHTML = '<p class="text-gray-700 text-lg">Click "Solve!" to see the answer and watch the animation.</p>';
+            
+            // 2. Hide the wind
+            windContainer.classList.add('hidden');
+
+            // 3. Instantly move the coconut back to the start
+            // We set the duration to 0s so it's immediate
+            coconut.style.transitionDuration = '0s'; 
+            
+            // Then we snap it back to the start position
+            // (requesting a layout change, but it's fine)
+            coconut.style.top = `${COCONUT_START_TOP}px`;
+            coconut.style.left = `${COCONUT_START_LEFT}px`;
+
+            // 4. Re-enable the solve button
+            btnSolve.disabled = false;
+            btnSolve.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+
+        // Add the click listeners to the buttons
+        btnSolve.addEventListener('click', solveProblem);
+        btnReset.addEventListener('click', resetProblem);
+        
+        // Add a 'load' event to make sure all elements (like the person's head)
+        // are properly rendered before we try to get their positions.
+        window.addEventListener('load', () => {
+            // This is a good practice, though in this simple case it might not be
+            // strictly necessary, it avoids race conditions.
+            // All calculations that depend on element positions are already done,
+            // but if we had moved them here, it would be even safer.
+        });
+    </script>
+
+</body>
+</html>
