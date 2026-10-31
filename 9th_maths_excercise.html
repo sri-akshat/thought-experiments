@@ -1,0 +1,1623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Interactive Grade 9 ICSE Mathematics Intuition Lab and 40-Mark Practice Paper Hub for Arnav Srivastava.">
+  <title>Arnav's Grade 9 Maths Intuition Lab &amp; Practice Hub</title>
+  <style>
+    :root {
+      --bg: #FAF9F5;
+      --surface: #FFFFFF;
+      --surface-soft: #F3F1EA;
+      --ink: #18181B;
+      --muted: #52525B;
+      --border: #E4E2DA;
+      --navy: #1E3A8A;
+      --navy-soft: #EFF6FF;
+      --green: #15803D;
+      --green-soft: #F0FDF4;
+      --red: #B91C1C;
+      --red-soft: #FEF2F2;
+      --amber: #B45309;
+      --amber-soft: #FFFBEB;
+      --radius: 12px;
+      --shadow: 0 2px 8px rgba(24, 24, 27, 0.05);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .math {
+      font-family: "Times New Roman", Times, Georgia, serif;
+      font-size: 1.08em;
+      letter-spacing: 0.01em;
+    }
+    .math i, .math var { font-style: italic; }
+    .frac {
+      display: inline-flex;
+      flex-direction: column;
+      vertical-align: middle;
+      text-align: center;
+      font-size: 0.9em;
+      margin: 0 2px;
+      line-height: 1.1;
+    }
+    .frac > span:first-child { border-bottom: 1px solid currentColor; padding: 0 3px 1px; }
+    .frac > span:last-child { padding: 1px 3px 0; }
+
+    header.topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
+    .topbar-inner {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .brand h1 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+    .brand p {
+      margin: 2px 0 0;
+      font-size: 0.84rem;
+      color: var(--muted);
+    }
+    .progress-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface-soft);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.84rem;
+      font-weight: 600;
+    }
+    .progress-bar-wrap {
+      width: 96px;
+      height: 8px;
+      background: #DCD9CE;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--green);
+      width: 0%;
+      transition: width 0.25s ease;
+    }
+
+    nav.module-tabs {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 12px 20px 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    .tab-btn {
+      appearance: none;
+      border: 1px solid var(--border);
+      border-bottom: none;
+      background: var(--surface-soft);
+      color: var(--muted);
+      padding: 9px 11px;
+      border-radius: 10px 10px 0 0;
+      font-size: 0.81rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s, color 0.15s;
+    }
+    .tab-btn:hover { color: var(--ink); background: #EAE7DD; }
+    .tab-btn.active {
+      background: var(--surface);
+      color: var(--navy);
+      border-color: var(--border);
+      box-shadow: 0 2px 0 var(--surface);
+    }
+    .tab-badge {
+      display: inline-block;
+      margin-left: 5px;
+      padding: 1px 6px;
+      border-radius: 99px;
+      font-size: 0.75rem;
+      background: #E4E2DA;
+      color: var(--ink);
+    }
+    .tab-btn.active .tab-badge {
+      background: var(--navy-soft);
+      color: var(--navy);
+    }
+
+    main.container {
+      max-width: 1140px;
+      margin: 0 auto 48px;
+      padding: 0 20px;
+    }
+    .module-panel {
+      display: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 0 var(--radius) var(--radius) var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+    .module-panel.active { display: block; }
+
+    .module-head {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+    .module-head h2 { margin: 0 0 4px; font-size: 1.35rem; letter-spacing: -0.01em; }
+    .module-head p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+    .marks-tag {
+      background: var(--amber-soft);
+      color: var(--amber);
+      border: 1px solid #FDE68A;
+      padding: 5px 11px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .gametape {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .tape-box {
+      padding: 14px 16px;
+      border-radius: 10px;
+      font-size: 0.92rem;
+    }
+    .tape-trap {
+      background: var(--red-soft);
+      border: 1px solid #FECACA;
+    }
+    .tape-fix {
+      background: var(--green-soft);
+      border: 1px solid #BBF7D0;
+    }
+    .tape-title {
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 6px;
+    }
+    .tape-trap .tape-title { color: var(--red); }
+    .tape-fix .tape-title { color: var(--green); }
+
+    .sim-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 20px;
+      margin-bottom: 26px;
+    }
+    .sim-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px;
+    }
+    .sim-card h3 {
+      margin: 0 0 6px;
+      font-size: 1.04rem;
+      color: var(--ink);
+    }
+    .sim-card p.sub {
+      margin: 0 0 14px;
+      font-size: 0.86rem;
+      color: var(--muted);
+    }
+
+    .controls-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .slider-group {
+      flex: 1;
+      min-width: 130px;
+    }
+    .slider-group label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.84rem;
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--navy);
+      cursor: pointer;
+    }
+
+    .btn-group {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .btn {
+      appearance: none;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--ink);
+      padding: 7px 12px;
+      border-radius: 8px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+    .btn:hover { background: var(--surface-soft); border-color: #C8C4B8; }
+    .btn.primary {
+      background: var(--navy);
+      color: #FFFFFF;
+      border-color: var(--navy);
+    }
+    .btn.primary:hover { background: #1D4ED8; }
+    .btn.active-toggle {
+      background: var(--navy-soft);
+      color: var(--navy);
+      border-color: #93C5FD;
+    }
+    .btn.warn-toggle {
+      background: var(--red-soft);
+      color: var(--red);
+      border-color: #FCA5A5;
+    }
+
+    .svg-stage {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+    }
+    .svg-stage svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+    .readout {
+      margin-top: 10px;
+      padding: 10px 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+
+    /* X-ray chunk styles */
+    .xray-stage {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 10px;
+    }
+    .chunk-a {
+      background: #DBEAFE;
+      color: #1E3A8A;
+      padding: 2px 6px;
+      border-radius: 5px;
+      font-weight: 700;
+    }
+    .chunk-b {
+      background: #FEE2E2;
+      color: #991B1B;
+      padding: 2px 6px;
+      border-radius: 5px;
+      font-weight: 700;
+    }
+    .chunk-u {
+      background: #DCFCE7;
+      color: #166534;
+      padding: 2px 6px;
+      border-radius: 5px;
+      font-weight: 700;
+    }
+    .xray-step {
+      padding: 8px 10px;
+      border-bottom: 1px dashed var(--border);
+      font-size: 0.98rem;
+    }
+    .xray-step:last-child { border-bottom: none; }
+
+    /* Practice Quiz Section */
+    .practice-section {
+      border-top: 1px solid var(--border);
+      padding-top: 20px;
+    }
+    .practice-section h3 {
+      margin: 0 0 12px;
+      font-size: 1.08rem;
+    }
+    .quiz-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 14px;
+    }
+    .q-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      background: var(--bg);
+    }
+    .q-stem {
+      font-weight: 600;
+      font-size: 0.94rem;
+      margin-bottom: 10px;
+    }
+    .q-opts {
+      display: grid;
+      gap: 6px;
+    }
+    .q-opt {
+      text-align: left;
+      padding: 8px 11px;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      background: var(--surface);
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: background 0.12s, border-color 0.12s;
+    }
+    .q-opt:hover { background: var(--surface-soft); }
+    .q-opt.correct {
+      background: var(--green-soft);
+      border-color: #86EFAC;
+      color: #14532D;
+      font-weight: 600;
+    }
+    .q-opt.wrong {
+      background: var(--red-soft);
+      border-color: #FCA5A5;
+      color: #7F1D1D;
+    }
+    .q-feedback {
+      margin-top: 8px;
+      font-size: 0.84rem;
+      padding: 8px 10px;
+      border-radius: 6px;
+      display: none;
+    }
+    .q-feedback.show { display: block; }
+    .q-feedback.ok { background: var(--green-soft); color: #14532D; }
+    .q-feedback.err { background: var(--amber-soft); color: #78350F; }
+
+    /* Papers & Timer Hub */
+    .timer-box {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: var(--navy-soft);
+      border: 1px solid #BFDBFE;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+    }
+    .timer-clock {
+      font-size: 2rem;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      color: var(--navy);
+    }
+    .paper-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+    .paper-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .paper-card h3 { margin: 0 0 4px; font-size: 1.05rem; }
+    .paper-card p { margin: 0; font-size: 0.87rem; color: var(--muted); }
+    .score-input-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+    .score-input-row input {
+      width: 64px;
+      padding: 5px 8px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      padding: 7px 0;
+      font-size: 0.91rem;
+    }
+    .checklist-item input { margin-top: 4px; accent-color: var(--green); }
+
+    @media (max-width: 640px) {
+      .module-panel { padding: 16px; }
+      .sim-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <h1>Arnav's Grade 9 Maths Intuition Studio</h1>
+      <p>Built from Greenwood High Term-1 Paper (3/10/2026) &middot; Interactive Visualisers + Three 40-Mark Practice Papers</p>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <div class="progress-pill" title="Interactive intuition checks solved">
+        <span>Intuition Checks: <span id="solvedCount">0</span> / 20</span>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" id="solvedBar"></div></div>
+      </div>
+      <a class="btn primary" href="00_Arnav_BugFix_CheatSheet.pdf" target="_blank">Bug-Fix Card (PDF)</a>
+    </div>
+  </div>
+  <nav class="module-tabs" aria-label="Intuition Modules">
+    <button class="tab-btn active" data-tab="mod1" id="tab-mod1">1. Squares &amp; Roots <span class="tab-badge" id="badge-mod1">0/4</span></button>
+    <button class="tab-btn" data-tab="mod2" id="tab-mod2">2. Factorisation X-Ray <span class="tab-badge" id="badge-mod2">0/4</span></button>
+    <button class="tab-btn" data-tab="mod3" id="tab-mod3">3. Axes &amp; Graphs <span class="tab-badge" id="badge-mod3">0/4</span></button>
+    <button class="tab-btn" data-tab="mod4" id="tab-mod4">4. Mean, CI &amp; Logs <span class="tab-badge" id="badge-mod4">0/4</span></button>
+    <button class="tab-btn" data-tab="mod5" id="tab-mod5">5. Equations &amp; Geometry <span class="tab-badge" id="badge-mod5">0/4</span></button>
+    <button class="tab-btn" data-tab="mod6" id="tab-mod6">6. Practice Papers &amp; Timer</button>
+  </nav>
+</header>
+
+<main class="container">
+
+  <!-- ==================== MODULE 1 ==================== -->
+  <section class="module-panel active" id="mod1">
+    <div class="module-head">
+      <div>
+        <h2>Module 1: The Missing <span class="math">2<i>ab</i></span> &amp; The Square-Root Trap</h2>
+        <p>Why <span class="math">(<i>a</i> &plusmn; <i>b</i>)<sup>2</sup></span> ALWAYS has a middle term, and why <span class="math">&radic;(<i>a</i><sup>2</sup> + <i>b</i><sup>2</sup>)</span> can never split into <span class="math"><i>a</i> + <i>b</i></span>.</p>
+      </div>
+      <span class="marks-tag">Fixes Q3(ii)(b), Q5(iii), Q7(ii) &middot; +9 Marks</span>
+    </div>
+
+    <div class="gametape">
+      <div class="tape-box tape-trap">
+        <div class="tape-title">What Happened on Term-1 Paper</div>
+        <div>&bull; In Q7(ii), <span class="math">(6 + 2<i>x</i>)<sup>2</sup></span> became <span class="math">36 + 4<i>x</i><sup>2</sup></span> (the <span class="math">24<i>x</i></span> middle term vanished), and in Q3(ii)(b), <span class="math">(4 &minus; <i>k</i>)<sup>2</sup></span> became <span class="math">16 + <i>k</i><sup>2</sup></span>.<br>
+        &bull; In Q3(ii)(b), <span class="math">10 = &radic;(<i>k</i><sup>2</sup> + 80)</span> became <span class="math">10 = <i>k</i> + 4&radic;5</span>.</div>
+      </div>
+      <div class="tape-box tape-fix">
+        <div class="tape-title">The Physical Intuition</div>
+        <div>&bull; <b>Area of a Square:</b> Increasing a side from <span class="math"><i>a</i></span> to <span class="math">(<i>a</i> + <i>b</i>)</span> adds <b>two wing rectangles</b> of area <span class="math"><i>ab</i></span> each, not just a tiny <span class="math"><i>b</i><sup>2</sup></span> corner!<br>
+        &bull; <b>Hypotenuse Shortcut:</b> <span class="math">&radic;(<i>a</i><sup>2</sup> + <i>b</i><sup>2</sup>)</span> is the straight-line diagonal of a right triangle &mdash; always shorter than walking <span class="math"><i>a</i> + <i>b</i></span> along the two legs!</div>
+      </div>
+    </div>
+
+    <div class="sim-grid">
+      <!-- Simulator 1A: Area Model -->
+      <div class="sim-card">
+        <h3>Visualiser A: See the Missing <span class="math">2<i>ab</i></span> Area</h3>
+        <p class="sub">Drag <span class="math"><i>a</i></span> and <span class="math"><i>b</i></span>, then toggle the trap to watch how much area disappears without <span class="math">2<i>ab</i></span>.</p>
+        <div class="controls-row">
+          <div class="slider-group">
+            <label><span>Length <i class="math">a</i></span> <span id="m1-a-val">6</span></label>
+            <input type="range" id="m1-a" min="3" max="9" value="6">
+          </div>
+          <div class="slider-group">
+            <label><span>Length <i class="math">b</i></span> <span id="m1-b-val">4</span></label>
+            <input type="range" id="m1-b" min="1" max="6" value="4">
+          </div>
+        </div>
+        <div class="controls-row">
+          <div class="btn-group">
+            <button class="btn active-toggle" id="m1-mode-plus">(a + b)&sup2; Square</button>
+            <button class="btn" id="m1-mode-minus">(a &minus; b)&sup2; Visual</button>
+            <button class="btn" id="m1-hide-2ab">Show Trap (Drop 2ab)</button>
+          </div>
+        </div>
+        <div class="svg-stage">
+          <svg id="m1-area-svg" viewBox="0 0 320 265" width="320" height="265" aria-label="Area model for (a+b)^2"></svg>
+        </div>
+        <div class="readout" id="m1-area-readout"></div>
+      </div>
+
+      <!-- Simulator 1B: Root Trap Triangle -->
+      <div class="sim-card">
+        <h3>Visualiser B: Why <span class="math">&radic;(<i>a</i><sup>2</sup> + <i>b</i><sup>2</sup>) &ne; <i>a</i> + <i>b</i></span></h3>
+        <p class="sub">Compare walking straight along the hypotenuse vs walking along both legs.</p>
+        <div class="controls-row">
+          <div class="slider-group">
+            <label><span>Horizontal Leg <i class="math">a</i></span> <span id="m1-ra-val">4</span></label>
+            <input type="range" id="m1-ra" min="2" max="12" value="4">
+          </div>
+          <div class="slider-group">
+            <label><span>Vertical Leg <i class="math">b</i></span> <span id="m1-rb-val">3</span></label>
+            <input type="range" id="m1-rb" min="2" max="9" value="3">
+          </div>
+        </div>
+        <div class="svg-stage">
+          <svg id="m1-tri-svg" viewBox="0 0 320 230" width="320" height="230" aria-label="Right triangle comparing sqrt(a^2+b^2) with a+b"></svg>
+        </div>
+        <div class="readout" id="m1-tri-readout"></div>
+      </div>
+    </div>
+
+    <div class="practice-section">
+      <h3>Quick Intuition Check &mdash; Module 1 (4 Questions)</h3>
+      <div class="quiz-grid" id="quiz-mod1"></div>
+    </div>
+  </section>
+
+  <!-- ==================== MODULE 2 ==================== -->
+  <section class="module-panel" id="mod2">
+    <div class="module-head">
+      <div>
+        <h2>Module 2: &ldquo;X-Ray Vision&rdquo; for Factorisation, Cubes &amp; Surds</h2>
+        <p>Spot big algebraic chunks hidden inside long expressions instead of expanding everything blindly.</p>
+      </div>
+      <span class="marks-tag">Fixes Q2(iii), Q5(i), Q5(ii), Q7(iii), Q8(ii) &middot; +14 Marks</span>
+    </div>
+
+    <div class="gametape">
+      <div class="tape-box tape-trap">
+        <div class="tape-title">What Happened on Term-1 Paper</div>
+        <div>&bull; Left <span class="math">(<i>x</i><sup>2</sup> + <i>y</i><sup>2</sup> &minus; <i>z</i><sup>2</sup>)<sup>2</sup> &minus; 4<i>x</i><sup>2</sup><i>y</i><sup>2</sup></span> and <span class="math">(<i>x</i> + 4)<sup>2</sup> &minus; 5<i>xy</i> &minus; 20<i>y</i> &minus; 6<i>y</i><sup>2</sup></span> blank.<br>
+        &bull; Wrote <span class="math"><i>a</i><sup>3</sup> + <i>b</i><sup>3</sup> = (<i>a</i>+<i>b</i>)(<i>a</i><sup>2</sup> + <i>b</i><sup>2</sup> &minus; 2<i>ab</i>)</span> (extra 2!), and wrote <span class="math">(5 &minus; 2&radic;6) + (5 + 2&radic;6) = 10 + 4&radic;6</span>.</div>
+      </div>
+      <div class="tape-box tape-fix">
+        <div class="tape-title">The X-Ray Habit</div>
+        <div>&bull; <b>Never expand a bracket that's already squared!</b> Look for <span class="chunk-a">Chunk A</span><sup>2</sup> &minus; <span class="chunk-b">Chunk B</span><sup>2</sup> or a repeated <span class="chunk-u">Chunk U</span>.<br>
+        &bull; <b>SOAP Rule for Cubes:</b> <span class="math"><i>a</i><sup>3</sup> &plusmn; <i>b</i><sup>3</sup> = (<i>a</i> &plusmn; <i>b</i>)(<i>a</i><sup>2</sup> &#8723; <i>ab</i> + <i>b</i><sup>2</sup>)</span> &mdash; <b>S</b>ame sign, <b>O</b>pposite sign, <b>A</b>lways <b>P</b>lus (and single <span class="math"><i>ab</i></span>, never <span class="math">2<i>ab</i></span>!).</div>
+      </div>
+    </div>
+
+    <div class="sim-grid">
+      <div class="sim-card">
+        <h3>Visualiser A: Chunk X-Ray Stepper</h3>
+        <p class="sub">Pick an ICSE expression and step through with X-Ray highlighting switched on.</p>
+        <div class="controls-row">
+          <select id="m2-expr-select" class="btn" style="width:100%;justify-content:space-between;">
+            <option value="0">Term-1 Q2(iii): (x&sup2; + y&sup2; &minus; z&sup2;)&sup2; &minus; 4x&sup2;y&sup2;</option>
+            <option value="1">Term-1 Q5(i): (x + 4)&sup2; &minus; 5xy &minus; 20y &minus; 6y&sup2;</option>
+            <option value="2">Term-1 Q5(ii): Given a + b = 10, a&sup2; + b&sup2; = 58 &rarr; find a&sup3; + b&sup3;</option>
+            <option value="3">Term-1 Q7(iii): Given a&sup2;+b&sup2;+c&sup2; = 280, ab+bc+ca = 9/2 &rarr; (a+b+c)&sup3;</option>
+          </select>
+        </div>
+        <div class="controls-row">
+          <div class="btn-group">
+            <button class="btn" id="m2-prev-step">&larr; Prev Step</button>
+            <button class="btn primary" id="m2-next-step">Reveal Next Step &rarr;</button>
+            <button class="btn active-toggle" id="m2-reset-step">Show All Steps</button>
+          </div>
+        </div>
+        <div class="xray-stage" id="m2-xray-stage"></div>
+      </div>
+
+      <div class="sim-card">
+        <h3>Visualiser B: Conjugate Surd Sign Radar (<span class="math"><i>a</i> &plusmn; 1/<i>a</i></span>)</h3>
+        <p class="sub">See which part cancels when adding vs subtracting conjugates like <span class="math"><i>a</i> = 5 &minus; 2&radic;6</span>.</p>
+        <div class="controls-row">
+          <select id="m2-surd-select" class="btn">
+            <option value="0">a = 5 &minus; 2&radic;6 &nbsp;( since 5&sup2; &minus; (2&radic;6)&sup2; = 25 &minus; 24 = 1 )</option>
+            <option value="1">a = 7 &minus; 4&radic;3 &nbsp;( since 7&sup2; &minus; (4&radic;3)&sup2; = 49 &minus; 48 = 1 )</option>
+            <option value="2">a = 3 + 2&radic;2 &nbsp;( since 3&sup2; &minus; (2&radic;2)&sup2; = 9 &minus; 8 = 1 )</option>
+          </select>
+          <div class="btn-group">
+            <button class="btn active-toggle" id="m2-surd-plus">Add: a + 1/a</button>
+            <button class="btn" id="m2-surd-minus">Subtract: a &minus; 1/a</button>
+          </div>
+        </div>
+        <div class="xray-stage" id="m2-surd-stage"></div>
+      </div>
+    </div>
+
+    <div class="practice-section">
+      <h3>Quick Intuition Check &mdash; Module 2 (4 Questions)</h3>
+      <div class="quiz-grid" id="quiz-mod2"></div>
+    </div>
+  </section>
+
+  <!-- ==================== MODULE 3 ==================== -->
+  <section class="module-panel" id="mod3">
+    <div class="module-head">
+      <div>
+        <h2>Module 3: Coordinate Axes, Linear Graphs &amp; Frequency Polygons</h2>
+        <p>Lock points onto the right axis, shade triangles against the right axis, and plot polygons on midpoints.</p>
+      </div>
+      <span class="marks-tag">Fixes Q5(iii), Q1(ix), Q4(iii), Q3(i) &middot; +11 Marks</span>
+    </div>
+
+    <div class="gametape">
+      <div class="tape-box tape-trap">
+        <div class="tape-title">What Happened on Term-1 Paper</div>
+        <div>&bull; Q5(iii) asked for points on the <b>Y-axis</b> at distance <span class="math">5&radic;2</span> from <span class="math">(5, 8)</span> &mdash; wrote <span class="math">A = (<i>k</i>, 0)</span> (which is on the X-axis!).<br>
+        &bull; Q3(i) Frequency Polygon was plotted on class edges instead of <b>class midpoints</b>; Q4(iii) miscopied <span class="math"><i>x</i> &minus; 3<i>y</i> = 3</span> as <span class="math">6</span>.</div>
+      </div>
+      <div class="tape-box tape-fix">
+        <div class="tape-title">The Visual Anchor</div>
+        <div>&bull; <b>On the Y-axis</b>, you haven't moved left or right at all &rarr; <span class="math"><b><i>x</i> = 0</b></span> &rarr; <span class="math"><b>(0, <i>y</i>)</b></span>! And a circle around <span class="math">(5, 8)</span> slices the Y-axis twice: <span class="math">(0, 3)</span> and <span class="math">(0, 13)</span>.<br>
+        &bull; <b>Frequency Polygon:</b> Every peak sits dead-centre on the bar's roof (<b>Class Mark</b>) and lands back on the X-axis one class-width outside both ends.</div>
+      </div>
+    </div>
+
+    <div class="sim-grid">
+      <div class="sim-card">
+        <h3>Visualiser A: Slide Along the Y-Axis (Term-1 Q5 iii Live!)</h3>
+        <p class="sub">Slide <span class="math"><i>P</i>(0, <i>y</i>)</span> up and down the Y-axis to hit distance <span class="math">5&radic;2 &approx; 7.07</span> from <span class="math"><i>Q</i>(5, 8)</span>.</p>
+        <div class="controls-row">
+          <div class="slider-group">
+            <label><span>Slide Coordinate along Axis: <span id="m3-coord-lbl">y = 3</span></span></label>
+            <input type="range" id="m3-coord" min="-2" max="15" step="1" value="3">
+          </div>
+          <div class="btn-group">
+            <button class="btn active-toggle" id="m3-axis-y">Lock on Y-Axis: (0, y)</button>
+            <button class="btn" id="m3-axis-x">Lock on X-Axis: (x, 0)</button>
+          </div>
+        </div>
+        <div class="svg-stage">
+          <svg id="m3-coord-svg" viewBox="0 0 320 260" width="320" height="260" aria-label="Coordinate plane explorer"></svg>
+        </div>
+        <div class="readout" id="m3-coord-readout"></div>
+      </div>
+
+      <div class="sim-card">
+        <h3>Visualiser B: Graph Triangle &amp; Frequency Polygon Midpoints</h3>
+        <p class="sub">Switch between Term-1 Q4(iii) linear graph and Term-1 Q3(i) frequency polygon.</p>
+        <div class="controls-row">
+          <div class="btn-group">
+            <button class="btn active-toggle" id="m3-view-lines">Q4(iii): Lines &amp; Y-Axis Triangle</button>
+            <button class="btn" id="m3-view-poly">Q3(i): Frequency Polygon Midpoints</button>
+          </div>
+        </div>
+        <div class="controls-row" id="m3-sub-controls">
+          <button class="btn active-toggle" id="m3-shade-y">Shade Triangle with Y-Axis</button>
+          <button class="btn" id="m3-shade-x">Compare: Triangle with X-Axis</button>
+        </div>
+        <div class="svg-stage">
+          <svg id="m3-graph-svg" viewBox="0 0 340 250" width="340" height="250" aria-label="Graph and frequency polygon visualiser"></svg>
+        </div>
+        <div class="readout" id="m3-graph-readout"></div>
+      </div>
+    </div>
+
+    <div class="practice-section">
+      <h3>Quick Intuition Check &mdash; Module 3 (4 Questions)</h3>
+      <div class="quiz-grid" id="quiz-mod3"></div>
+    </div>
+  </section>
+
+  <!-- ==================== MODULE 4 ==================== -->
+  <section class="module-panel" id="mod4">
+    <div class="module-head">
+      <div>
+        <h2>Module 4: Assumed Mean Balance Beam, Semi-Annual CI &amp; Logs</h2>
+        <p>Why the Assumed Mean <span class="math"><i>A</i></span> must be added back, how half-yearly hops work, and finishing logs cleanly.</p>
+      </div>
+      <span class="marks-tag">Fixes Q7(i), Q1(viii), Q2(ii), Q2(i), Q4(ii) &middot; +9 Marks</span>
+    </div>
+
+    <div class="gametape">
+      <div class="tape-box tape-trap">
+        <div class="tape-title">What Happened on Term-1 Paper</div>
+        <div>&bull; Q7(i) Assumed Mean: Computed <span class="math">&Sigma;<i>f<sub>i</sub>d<sub>i</sub></i> = &minus;880</span> and <span class="math">&Sigma;<i>f<sub>i</sub></i> = 100</span> flawlessly, then boxed <b>Mean = &minus;8.8</b> for weekly wages of &#8377;800&ndash;&#8377;1000!<br>
+        &bull; Q1(viii): Used annual formula for semi-annual compounding; Q2(i) &amp; Q4(ii): Stopped 1 step before evaluating the final log.</div>
+      </div>
+      <div class="tape-box tape-fix">
+        <div class="tape-title">The 2-Second Sanity Check</div>
+        <div>&bull; <b>Mean = Anchor + Offset:</b> <span class="math">&minus;8.8</span> is just how far below your temporary anchor <span class="math"><i>A</i> = 900</span> the true balance point sits: <span class="math">900 + (&minus;8.8) = <b>&#8377;891.20</b></span>!<br>
+        &bull; <b>Semi-Annual = Every 6 Months:</b> In <span class="math">1&frac12;</span> years there are <b>3 six-month hops</b>, each at half the annual rate (<span class="math"><i>R</i>/2 %</span>).</div>
+      </div>
+    </div>
+
+    <div class="sim-grid">
+      <div class="sim-card">
+        <h3>Visualiser A: Drag the Assumed Mean Anchor <span class="math"><i>A</i></span> (Term-1 Q7 i)</h3>
+        <p class="sub">Move the anchor <span class="math"><i>A</i></span> anywhere! Watch the offset <span class="math">&Sigma;<i>f<sub>i</sub>d<sub>i</sub></i>/&Sigma;<i>f<sub>i</sub></i></span> change while <span class="math"><i>A</i> + offset</span> ALWAYS lands on &#8377;891.20.</p>
+        <div class="controls-row">
+          <div class="slider-group">
+            <label><span>Assumed Mean Anchor <i class="math">A</i></span> <span>&#8377;<span id="m4-a-val">900</span></span></label>
+            <input type="range" id="m4-a" min="800" max="1000" step="20" value="900">
+          </div>
+        </div>
+        <div class="svg-stage">
+          <svg id="m4-beam-svg" viewBox="0 0 340 205" width="340" height="205" aria-label="Assumed mean balance beam"></svg>
+        </div>
+        <div class="readout" id="m4-beam-readout"></div>
+      </div>
+
+      <div class="sim-card">
+        <h3>Visualiser B: Semi-Annual CI Hop Timeline &amp; Log Finisher</h3>
+        <p class="sub">See every compounding hop on a timeline so you never mix up <span class="math"><i>T</i></span> years with <span class="math">2<i>T</i></span> half-years.</p>
+        <div class="controls-row">
+          <select id="m4-ci-time" class="btn">
+            <option value="1.5" selected>Time = 1&frac12; years (Term-1 Q1 viii: &#8377;1000 at 20% p.a.)</option>
+            <option value="1">Time = 1 year (&#8377;20,000 at 10% p.a.)</option>
+            <option value="2">Time = 2 years (&#8377;10,000 at 20% p.a.)</option>
+          </select>
+          <div class="btn-group">
+            <button class="btn active-toggle" id="m4-ci-semi">Semi-Annual (Every 6 mo)</button>
+            <button class="btn" id="m4-ci-ann">Annual (Every 12 mo)</button>
+          </div>
+        </div>
+        <div class="svg-stage">
+          <svg id="m4-ci-svg" viewBox="0 0 340 165" width="340" height="165" aria-label="Compound interest timeline"></svg>
+        </div>
+        <div class="readout" id="m4-ci-readout"></div>
+      </div>
+    </div>
+
+    <div class="practice-section">
+      <h3>Quick Intuition Check &mdash; Module 4 (4 Questions)</h3>
+      <div class="quiz-grid" id="quiz-mod4"></div>
+    </div>
+  </section>
+
+  <!-- ==================== MODULE 5 ==================== -->
+  <section class="module-panel" id="mod5">
+    <div class="module-head">
+      <div>
+        <h2>Module 5: Geometry Tick-Mark Radar &amp; <span class="math">1/<i>x</i>, 1/<i>y</i></span> Equations</h2>
+        <p>Unlock hidden isosceles triangles with equal-side tick marks, check co-interior angles, and tame <span class="math">1/<i>x</i></span> systems.</p>
+      </div>
+      <span class="marks-tag">Fixes Q6(iii), Q1(xiii), Q8(i), Q4(i) &middot; +9 Marks</span>
+    </div>
+
+    <div class="gametape">
+      <div class="tape-box tape-trap">
+        <div class="tape-title">What Happened on Term-1 Paper</div>
+        <div>&bull; Q6(iii) Rhombus <span class="math">PQRS</span> + Equilateral <span class="math">&triangle;RST</span>: Missed that <span class="math">RQ = RS</span> and <span class="math">RT = RS</span> makes <span class="math"><b>RQ = RT</b></span> (<span class="math">&triangle;RQT</span> is isosceles!).<br>
+        &bull; Q1(xiii): Divided <span class="math">140&deg;</span> by 2 (<span class="math">70&deg;</span>) instead of co-interior <span class="math">180&deg; &minus; 140&deg; = 40&deg;</span>; Q8(i): Skipped <span class="math"><i>u</i> = 1/<i>x</i>, <i>v</i> = 1/<i>y</i></span>.</div>
+      </div>
+      <div class="tape-box tape-fix">
+        <div class="tape-title">The Geometry Habit</div>
+        <div>&bull; <b>Draw Tick Marks FIRST:</b> Whenever a question says &ldquo;Rhombus&rdquo;, &ldquo;Square&rdquo;, or &ldquo;Equilateral&rdquo;, put identical tick marks on every equal side &mdash; hidden isosceles triangles jump off the page!<br>
+        &bull; <b>Parallel Lines C-Pattern:</b> Co-interior angles inside a &lsquo;C&rsquo; add to <span class="math"><b>180&deg;</b></span>, never half!</div>
+      </div>
+    </div>
+
+    <div class="sim-grid">
+      <div class="sim-card">
+        <h3>Visualiser A: Rhombus + Equilateral Tick-Mark Radar (Term-1 Q6 iii)</h3>
+        <p class="sub">Adjust <span class="math">&angle;SPQ</span> (Term-1 had <span class="math">72&deg;</span>; Paper 3 has <span class="math">64&deg;</span>) and toggle Equal-Side Radar!</p>
+        <div class="controls-row">
+          <div class="slider-group">
+            <label><span>Rhombus Angle <span class="math">&angle;SPQ</span></span> <span><span id="m5-ang-val">72</span>&deg;</span></label>
+            <input type="range" id="m5-ang" min="50" max="82" step="2" value="72">
+          </div>
+          <button class="btn active-toggle" id="m5-radar-btn">Highlight Equal Sides (RQ = RS = RT)</button>
+        </div>
+        <div class="svg-stage">
+          <svg id="m5-rhom-svg" viewBox="0 0 340 250" width="340" height="250" aria-label="Rhombus PQRS and equilateral triangle RST"></svg>
+        </div>
+        <div class="readout" id="m5-rhom-readout"></div>
+      </div>
+
+      <div class="sim-card">
+        <h3>Visualiser B: Midpoint Co-Interior C-Angle &amp; <span class="math"><i>u</i> = 1/<i>x</i></span> Recipe</h3>
+        <p class="sub">Slide <span class="math">&angle;DBC</span> in Term-1 Q1(xiii) to see why <span class="math">&angle;BDE = 180&deg; &minus; &angle;DBC</span>.</p>
+        <div class="controls-row">
+          <div class="slider-group">
+            <label><span>Base Angle <span class="math">&angle;DBC</span></span> <span><span id="m5-mid-val">140</span>&deg;</span></label>
+            <input type="range" id="m5-mid" min="60" max="150" step="5" value="140">
+          </div>
+        </div>
+        <div class="svg-stage">
+          <svg id="m5-mid-svg" viewBox="0 0 340 185" width="340" height="185" aria-label="Midpoint theorem co-interior angles"></svg>
+        </div>
+        <div class="readout" id="m5-mid-readout"></div>
+      </div>
+    </div>
+
+    <div class="practice-section">
+      <h3>Quick Intuition Check &mdash; Module 5 (4 Questions)</h3>
+      <div class="quiz-grid" id="quiz-mod5"></div>
+    </div>
+  </section>
+
+  <!-- ==================== MODULE 6 ==================== -->
+  <section class="module-panel" id="mod6">
+    <div class="module-head">
+      <div>
+        <h2>Printable 1.5-Hour (40-Mark) Model Papers &amp; Exam Timer</h2>
+        <p>Complete Modules 1&ndash;5 first, print the paper (includes an ICSE 2 mm graph grid on the back page!), and write with pen on ruled sheets.</p>
+      </div>
+      <span class="marks-tag">Greenwood High ICSE Format &middot; Sec A (20m) + Best 2 of 3 Sec B (20m)</span>
+    </div>
+
+    <div class="timer-box">
+      <div>
+        <div style="font-weight:700;font-size:0.95rem;color:var(--navy);" id="timer-mode-lbl">Exam Practice Timer &mdash; Ready</div>
+        <div style="font-size:0.84rem;color:var(--muted);">Start with 10 min Reading Time (pen down &mdash; pick your 2 best Section B questions!), then 90 min Writing Time.</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+        <div class="timer-clock" id="timer-display">01:30:00</div>
+        <div class="btn-group">
+          <button class="btn" id="timer-10m">10m Reading</button>
+          <button class="btn active-toggle" id="timer-90m">90m Exam</button>
+          <button class="btn primary" id="timer-start">Start</button>
+          <button class="btn" id="timer-reset">Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="paper-cards">
+      <div class="paper-card">
+        <div>
+          <span class="marks-tag" style="display:inline-block;margin-bottom:8px;">Start Here (10 Mins)</span>
+          <h3>0. Pre-Test Bug-Fix &amp; Formula Card</h3>
+          <p>2-page printable reference card covering the 4 illegal-algebra traps, SOAP cubes rule, X-Ray factorisation, Assumed Mean sanity check, and Frequency Polygon midpoints.</p>
+        </div>
+        <div class="btn-group">
+          <a class="btn primary" href="00_Arnav_BugFix_CheatSheet.pdf" target="_blank">Open Printable PDF</a>
+        </div>
+      </div>
+
+      <div class="paper-card">
+        <div>
+          <span class="marks-tag" style="display:inline-block;margin-bottom:8px;">Paper 1 &middot; 1.5 Hrs &middot; 40 Marks</span>
+          <h3>Model Paper 1: Algebra, Surds, Logs, CI &amp; Stats</h3>
+          <p>Targets Expansions, Factorisation (<span class="math">A<sup>2</sup>&minus;B<sup>2</sup></span> &amp; chunking), Surds (<span class="math">a + 1/a</span>), Logarithms, Semi-Annual CI, Assumed Mean, and Frequency Polygon.</p>
+        </div>
+        <div>
+          <div class="btn-group" style="margin-bottom:10px;">
+            <a class="btn primary" href="01_Model_Paper_1_Questions.pdf" target="_blank">Question Paper PDF</a>
+            <a class="btn" href="01_Model_Paper_1_Answer_Key.pdf" target="_blank">Step-Marked Key PDF</a>
+          </div>
+          <div class="score-input-row">
+            <label for="score-p1">Arnav's Score:</label>
+            <input type="number" id="score-p1" min="0" max="40" placeholder="--"> <span>/ 40</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="paper-card">
+        <div>
+          <span class="marks-tag" style="display:inline-block;margin-bottom:8px;">Paper 2 &middot; 1.5 Hrs &middot; 40 Marks</span>
+          <h3>Model Paper 2: Equations, Graphs &amp; Coordinates</h3>
+          <p>Targets <span class="math">1/x, 1/y</span> Cross-Multiplication, Graphical Solution + Triangle with Y-Axis, Distance Formula (<span class="math">(0, y)</span> traps), Boat &amp; Fraction Word Problems, and Pythagoras.</p>
+        </div>
+        <div>
+          <div class="btn-group" style="margin-bottom:10px;">
+            <a class="btn primary" href="02_Model_Paper_2_Questions.pdf" target="_blank">Question Paper PDF</a>
+            <a class="btn" href="02_Model_Paper_2_Answer_Key.pdf" target="_blank">Step-Marked Key PDF</a>
+          </div>
+          <div class="score-input-row">
+            <label for="score-p2">Arnav's Score:</label>
+            <input type="number" id="score-p2" min="0" max="40" placeholder="--"> <span>/ 40</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="paper-card">
+        <div>
+          <span class="marks-tag" style="display:inline-block;margin-bottom:8px;">Paper 3 &middot; 1.5 Hrs &middot; 40 Marks</span>
+          <h3>Model Paper 3: Geometry + Full Dress Rehearsal</h3>
+          <p>Targets Rhombus + Equilateral Angle-Chasing, Midpoint &amp; Converse Midpoint Proofs, Parallelogram Congruence, plus a full mixed Term-1 simulation.</p>
+        </div>
+        <div>
+          <div class="btn-group" style="margin-bottom:10px;">
+            <a class="btn primary" href="03_Model_Paper_3_Questions.pdf" target="_blank">Question Paper PDF</a>
+            <a class="btn" href="03_Model_Paper_3_Answer_Key.pdf" target="_blank">Step-Marked Key PDF</a>
+          </div>
+          <div class="score-input-row">
+            <label for="score-p3">Arnav's Score:</label>
+            <input type="number" id="score-p3" min="0" max="40" placeholder="--"> <span>/ 40</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sim-card">
+      <h3>Arnav's Post-Paper Self-Audit Checklist (Tick After Every Paper!)</h3>
+      <label class="checklist-item"><input type="checkbox" class="audit-cb" data-id="c1"> <span><b>Reading-Time Discipline:</b> I chose my 2 strongest Section B questions up front and finished all 6 sub-parts cleanly instead of jumping across 3 questions.</span></label>
+      <label class="checklist-item"><input type="checkbox" class="audit-cb" data-id="c2"> <span><b>Zero Missing <span class="math">2<i>ab</i></span>:</b> Every <span class="math">(A &plusmn; B)<sup>2</sup></span> expansion included its <span class="math">&plusmn;2AB</span> middle term.</span></label>
+      <label class="checklist-item"><input type="checkbox" class="audit-cb" data-id="c3"> <span><b>Zero Illegal Root-Splitting:</b> Whenever an unknown was inside <span class="math">&radic;(...)</span>, I squared both sides of the equation first.</span></label>
+      <label class="checklist-item"><input type="checkbox" class="audit-cb" data-id="c4"> <span><b>Two-Finger Copy Check:</b> I verified every equation copied onto my answer sheet sign-for-sign against the printed paper.</span></label>
+      <label class="checklist-item"><input type="checkbox" class="audit-cb" data-id="c5"> <span><b>Last-Line Sanity Check:</b> I added <span class="math">A</span> back to the Assumed Mean, inverted <span class="math">u = 1/x</span> back to <span class="math">x</span>, and evaluated final logs to numbers.</span></label>
+      
+    </div>
+  </section>
+
+</main>
+
+<script>
+(function() {
+  const STORAGE_KEY = 'arnav_maths_studio_v1';
+  let state = { solved: {}, scores: {}, checks: {} };
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) state = Object.assign(state, JSON.parse(raw));
+  } catch (e) {}
+  function saveState() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+  }
+
+  // Tab switching
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.module-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // ==================== MODULE 1 VISUALISERS ====================
+  let m1Mode = 'plus';
+  let m1Drop2ab = false;
+  const m1A = document.getElementById('m1-a');
+  const m1B = document.getElementById('m1-b');
+
+  function renderM1Area() {
+    const a = parseInt(m1A.value, 10);
+    const b = parseInt(m1B.value, 10);
+    document.getElementById('m1-a-val').textContent = a;
+    document.getElementById('m1-b-val').textContent = b;
+    const svg = document.getElementById('m1-area-svg');
+    const readout = document.getElementById('m1-area-readout');
+
+    if (m1Mode === 'plus') {
+      const total = a + b;
+      const scale = 200 / total;
+      const aw = a * scale, bw = b * scale;
+      const ox = 60, oy = 32;
+      const op2ab = m1Drop2ab ? 0.10 : 0.92;
+      const strokeDash = m1Drop2ab ? '5,4' : 'none';
+      svg.innerHTML = `
+        <text x="${ox + aw/2}" y="${oy - 10}" text-anchor="middle" font-size="13" font-weight="700" fill="#1E3A8A">a = ${a}</text>
+        <text x="${ox + aw + bw/2}" y="${oy - 10}" text-anchor="middle" font-size="13" font-weight="700" fill="#15803D">b = ${b}</text>
+        <text x="${ox - 12}" y="${oy + aw/2 + 4}" text-anchor="end" font-size="13" font-weight="700" fill="#1E3A8A">a=${a}</text>
+        <text x="${ox - 12}" y="${oy + aw + bw/2 + 4}" text-anchor="end" font-size="13" font-weight="700" fill="#15803D">b=${b}</text>
+
+        <rect x="${ox}" y="${oy}" width="${aw}" height="${aw}" fill="#DBEAFE" stroke="#1E3A8A" stroke-width="2"/>
+        <text x="${ox + aw/2}" y="${oy + aw/2 + 5}" text-anchor="middle" font-size="15" font-weight="700" fill="#1E3A8A">a² = ${a*a}</text>
+
+        <rect x="${ox + aw}" y="${oy}" width="${bw}" height="${aw}" fill="#FEF3C7" fill-opacity="${op2ab}" stroke="#B45309" stroke-width="2" stroke-dasharray="${strokeDash}"/>
+        <text x="${ox + aw + bw/2}" y="${oy + aw/2 + 5}" text-anchor="middle" font-size="13" font-weight="700" fill="#92400E">${m1Drop2ab ? 'MISSING!' : 'ab = ' + (a*b)}</text>
+
+        <rect x="${ox}" y="${oy + aw}" width="${aw}" height="${bw}" fill="#FEF3C7" fill-opacity="${op2ab}" stroke="#B45309" stroke-width="2" stroke-dasharray="${strokeDash}"/>
+        <text x="${ox + aw/2}" y="${oy + aw + bw/2 + 5}" text-anchor="middle" font-size="13" font-weight="700" fill="#92400E">${m1Drop2ab ? 'MISSING!' : 'ab = ' + (a*b)}</text>
+
+        <rect x="${ox + aw}" y="${oy + aw}" width="${bw}" height="${bw}" fill="#DCFCE7" stroke="#15803D" stroke-width="2"/>
+        <text x="${ox + aw + bw/2}" y="${oy + aw + bw/2 + 4}" text-anchor="middle" font-size="12" font-weight="700" fill="#166534">b²=${b*b}</text>
+
+        <text x="160" y="254" text-anchor="middle" font-size="13" font-weight="700" fill="#18181B">Total Side = ${a} + ${b} = ${total}</text>
+      `;
+      const trueVal = total * total;
+      const trapVal = a*a + b*b;
+      readout.innerHTML = m1Drop2ab
+        ? `<span style="color:var(--red);font-weight:700;">Trap (${a}² + ${b}² = ${trapVal}):</span> You lost the two amber wings worth <b>2 &times; ${a} &times; ${b} = ${2*a*b}</b>! True (${a}+${b})² = <b>${trueVal}</b>.`
+        : `<b>(${a} + ${b})² = ${trueVal}</b> &nbsp;=&nbsp; <span style="color:var(--navy);font-weight:700;">${a*a}</span> + <span style="color:var(--amber);font-weight:700;">2(${a*b})</span> + <span style="color:var(--green);font-weight:700;">${b*b}</span> = ${a*a} + ${2*a*b} + ${b*b} = <b>${trueVal}</b>.`;
+    } else {
+      const big = Math.max(a, b + 1);
+      const small = Math.min(b, big - 1);
+      const diff = big - small;
+      const scale = 200 / big;
+      const dw = diff * scale, sw = small * scale;
+      const ox = 60, oy = 32;
+      svg.innerHTML = `
+        <text x="${ox + (dw+sw)/2}" y="${oy - 10}" text-anchor="middle" font-size="13" font-weight="700" fill="#18181B">Full side a = ${big} (remove b = ${small})</text>
+        <rect x="${ox}" y="${oy}" width="${dw}" height="${dw}" fill="#DBEAFE" stroke="#1E3A8A" stroke-width="2.5"/>
+        <text x="${ox + dw/2}" y="${oy + dw/2 + 5}" text-anchor="middle" font-size="13" font-weight="700" fill="#1E3A8A">(a&minus;b)² = ${diff*diff}</text>
+
+        <rect x="${ox + dw}" y="${oy}" width="${sw}" height="${dw}" fill="#FEE2E2" stroke="#B91C1C" stroke-width="1.5"/>
+        <text x="${ox + dw + sw/2}" y="${oy + dw/2 + 4}" text-anchor="middle" font-size="11" fill="#991B1B">&minus;b(a&minus;b)</text>
+
+        <rect x="${ox}" y="${oy + dw}" width="${dw}" height="${sw}" fill="#FEE2E2" stroke="#B91C1C" stroke-width="1.5"/>
+        <text x="${ox + dw/2}" y="${oy + dw + sw/2 + 4}" text-anchor="middle" font-size="11" fill="#991B1B">&minus;b(a&minus;b)</text>
+
+        <rect x="${ox + dw}" y="${oy + dw}" width="${sw}" height="${sw}" fill="#FEF3C7" stroke="#B45309" stroke-width="2"/>
+        <text x="${ox + dw + sw/2}" y="${oy + dw + sw/2 + 4}" text-anchor="middle" font-size="11" font-weight="700" fill="#92400E">b²=${small*small}</text>
+        <text x="160" y="254" text-anchor="middle" font-size="12" fill="#52525B">Subtracting two ab strips (${2*big*small}) subtracts corner b² twice &rarr; add +b² back!</text>
+      `;
+      readout.innerHTML = `<b>(${big} &minus; ${small})² = ${diff*diff}</b> &nbsp;=&nbsp; ${big}² &minus; <b>2(${big})(${small})</b> + ${small}² = ${big*big} &minus; ${2*big*small} + ${small*small} = <b>${diff*diff}</b> ( whereas ${big}² + ${small}² = ${big*big + small*small} &mdash; way off! ).`;
+    }
+  }
+
+  document.getElementById('m1-mode-plus').addEventListener('click', function() {
+    m1Mode = 'plus';
+    this.classList.add('active-toggle');
+    document.getElementById('m1-mode-minus').classList.remove('active-toggle');
+    renderM1Area();
+  });
+  document.getElementById('m1-mode-minus').addEventListener('click', function() {
+    m1Mode = 'minus';
+    this.classList.add('active-toggle');
+    document.getElementById('m1-mode-plus').classList.remove('active-toggle');
+    renderM1Area();
+  });
+  document.getElementById('m1-hide-2ab').addEventListener('click', function() {
+    m1Mode = 'plus';
+    document.getElementById('m1-mode-plus').classList.add('active-toggle');
+    document.getElementById('m1-mode-minus').classList.remove('active-toggle');
+    m1Drop2ab = !m1Drop2ab;
+    this.classList.toggle('warn-toggle', m1Drop2ab);
+    this.textContent = m1Drop2ab ? 'Restore Missing 2ab!' : 'Show Trap (Drop 2ab)';
+    renderM1Area();
+  });
+  m1A.addEventListener('input', renderM1Area);
+  m1B.addEventListener('input', renderM1Area);
+
+  const m1RA = document.getElementById('m1-ra');
+  const m1RB = document.getElementById('m1-rb');
+  function renderM1Tri() {
+    const a = parseInt(m1RA.value, 10);
+    const b = parseInt(m1RB.value, 10);
+    document.getElementById('m1-ra-val').textContent = a;
+    document.getElementById('m1-rb-val').textContent = b;
+    const hyp = Math.hypot(a, b);
+    const scale = Math.min(210 / a, 160 / b);
+    const x0 = 50, y0 = 195;
+    const x1 = x0 + a * scale, y1 = y0 - b * scale;
+    const hypStr = Number.isInteger(hyp) ? hyp.toString() : hyp.toFixed(2);
+    document.getElementById('m1-tri-svg').innerHTML = `
+      <polygon points="${x0},${y0} ${x1},${y0} ${x1},${y1}" fill="#EFF6FF" stroke="#1E3A8A" stroke-width="2"/>
+      <rect x="${x1 - 12}" y="${y0 - 12}" width="12" height="12" fill="none" stroke="#1E3A8A" stroke-width="1.5"/>
+      <line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="#15803D" stroke-width="3.5"/>
+      <line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y0}" stroke="#B91C1C" stroke-width="2.5" stroke-dasharray="5,4"/>
+      <line x1="${x1}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="#B91C1C" stroke-width="2.5" stroke-dasharray="5,4"/>
+      <text x="${(x0+x1)/2}" y="${y0 + 20}" text-anchor="middle" font-size="13" font-weight="700" fill="#B91C1C">a = ${a}</text>
+      <text x="${x1 + 10}" y="${(y0+y1)/2 + 4}" font-size="13" font-weight="700" fill="#B91C1C">b = ${b}</text>
+      <text x="${(x0+x1)/2 - 14}" y="${(y0+y1)/2 - 12}" text-anchor="end" font-size="13" font-weight="700" fill="#15803D">&radic;(${a}²+${b}²) = ${hypStr}</text>
+    `;
+    document.getElementById('m1-tri-readout').innerHTML =
+      `<span style="color:var(--green);font-weight:700;">True Diagonal &radic;(${a*a} + ${b*b}) = &radic;${a*a+b*b} = ${hypStr}</span> &nbsp;&ne;&nbsp; <span style="color:var(--red);font-weight:700;">Detour a + b = ${a + b}</span>.<br>` +
+      `<small><b>Exam Rule:</b> When solving <span class="math">10 = &radic;((4&minus;k)² + 64)</span>, <b>square both sides</b> first: <span class="math">100 = (4&minus;k)² + 64 &rArr; (4&minus;k)² = 36</span>!</small>`;
+  }
+  m1RA.addEventListener('input', renderM1Tri);
+  m1RB.addEventListener('input', renderM1Tri);
+
+  // ==================== MODULE 2 VISUALISERS ====================
+  const xrayProblems = [
+    {
+      steps: [
+        `<b>Original:</b> <span class="math">(<i>x</i>² + <i>y</i>² &minus; <i>z</i>²)² &minus; 4<i>x</i>²<i>y</i>²</span>`,
+        `<b>Step 1 (X-Ray Chunking):</b> Spot <span class="chunk-a">A = (x² + y² &minus; z²)</span> and <span class="chunk-b">B = 2xy</span> so it reads <span class="chunk-a">A</span>² &minus; <span class="chunk-b">B</span>²!`,
+        `<b>Step 2 (Apply A² &minus; B²):</b> <span class="math">(<span class="chunk-a">x² + y² &minus; z²</span> &minus; <span class="chunk-b">2xy</span>)(<span class="chunk-a">x² + y² &minus; z²</span> + <span class="chunk-b">2xy</span>)</span>`,
+        `<b>Step 3 (Group Perfect Squares Inside!):</b> <span class="math">[ (x &minus; y)² &minus; z² ] [ (x + y)² &minus; z² ]</span> &mdash; another pair of A² &minus; B²!`,
+        `<b>Step 4 (Final 4 Linear Factors):</b> <span class="math" style="color:var(--green);font-weight:700;">(x &minus; y &minus; z)(x &minus; y + z)(x + y &minus; z)(x + y + z)</span>`
+      ]
+    },
+    {
+      steps: [
+        `<b>Original:</b> <span class="math">(<i>x</i> + 4)² &minus; 5<i>xy</i> &minus; 20<i>y</i> &minus; 6<i>y</i>²</span>`,
+        `<b>Step 1 (Pull &minus;5y from middle two terms):</b> <span class="math"><span class="chunk-u">(x + 4)</span>² &minus; 5<i>y</i><span class="chunk-u">(x + 4)</span> &minus; 6<i>y</i>²</span> &mdash; look, <span class="chunk-u">U = (x + 4)</span> repeats!`,
+        `<b>Step 2 (Split Middle Term in U):</b> <span class="math"><span class="chunk-u">U</span>² &minus; 6<i>y</i><span class="chunk-u">U</span> + 1<i>y</i><span class="chunk-u">U</span> &minus; 6<i>y</i>² = (<span class="chunk-u">U</span> &minus; 6<i>y</i>)(<span class="chunk-u">U</span> + <i>y</i>)</span>`,
+        `<b>Step 3 (Put U = x + 4 back):</b> <span class="math" style="color:var(--green);font-weight:700;">(x &minus; 6y + 4)(x + y + 4)</span>`
+      ]
+    },
+    {
+      steps: [
+        `<b>Given:</b> <span class="math"><i>a</i> + <i>b</i> = 10</span> and <span class="math"><i>a</i>² + <i>b</i>² = 58</span>. Find <span class="math"><i>a</i>³ + <i>b</i>³</span>.`,
+        `<b>Step 1 (Bridge Step &mdash; Find <i>ab</i> FIRST!):</b> <span class="math">(a + b)² = a² + b² + 2ab &rArr; 100 = 58 + 2ab &rArr; <span class="chunk-u">ab = 21</span></span>`,
+        `<b>Step 2 (SOAP Cubes Formula &mdash; single &minus;ab!):</b> <span class="math">a³ + b³ = (a + b)(a² <b>&minus; ab</b> + b²)</span>`,
+        `<b>Step 3 (Substitute):</b> <span class="math">10 &times; (58 &minus; 21) = 10 &times; 37 = <b style="color:var(--green);">370</b></span>`
+      ]
+    },
+    {
+      steps: [
+        `<b>Given:</b> <span class="math"><i>a</i>² + <i>b</i>² + <i>c</i>² = 280</span> and <span class="math"><i>ab</i> + <i>bc</i> + <i>ca</i> = 9/2</span>. Find <span class="math">(<i>a</i> + <i>b</i> + <i>c</i>)³</span> (for positive sum).`,
+        `<b>Step 1 (Use the Square Identity First, NOT Cube!):</b> <span class="math">(a + b + c)² = (a² + b² + c²) + 2(ab + bc + ca)</span>`,
+        `<b>Step 2 (Compute):</b> <span class="math">(a + b + c)² = 280 + 2(9/2) = 280 + 9 = 289 &rArr; <span class="chunk-u">a + b + c = 17</span></span>`,
+        `<b>Step 3 (Now Cube 17):</b> <span class="math">(a + b + c)³ = 17³ = <b style="color:var(--green);">4913</b></span>`
+      ]
+    }
+  ];
+  let m2Idx = 0, m2Shown = 5;
+  function renderM2Xray() {
+    const steps = xrayProblems[m2Idx].steps;
+    const cap = Math.min(m2Shown, steps.length);
+    document.getElementById('m2-xray-stage').innerHTML = steps.slice(0, cap)
+      .map(s => `<div class="xray-step">${s}</div>`).join('');
+  }
+  document.getElementById('m2-expr-select').addEventListener('change', function() {
+    m2Idx = parseInt(this.value, 10);
+    m2Shown = 1;
+    renderM2Xray();
+  });
+  document.getElementById('m2-next-step').addEventListener('click', () => { m2Shown = Math.min(m2Shown + 1, 6); renderM2Xray(); });
+  document.getElementById('m2-prev-step').addEventListener('click', () => { m2Shown = Math.max(m2Shown - 1, 1); renderM2Xray(); });
+  document.getElementById('m2-reset-step').addEventListener('click', () => { m2Shown = 6; renderM2Xray(); });
+
+  const surdData = [
+    { a: '5 &minus; 2&radic;6', inv: '5 + 2&radic;6', p: 5, q: '&minus;2&radic;6', invq: '+2&radic;6', sum: '10', diff: '&minus;4&radic;6', sq: 98 },
+    { a: '7 &minus; 4&radic;3', inv: '7 + 4&radic;3', p: 7, q: '&minus;4&radic;3', invq: '+4&radic;3', sum: '14', diff: '&minus;8&radic;3', sq: 194 },
+    { a: '3 + 2&radic;2', inv: '3 &minus; 2&radic;2', p: 3, q: '+2&radic;2', invq: '&minus;2&radic;2', sum: '6', diff: '4&radic;2', sq: 34 }
+  ];
+  let m2SurdOp = 'plus';
+  function renderM2Surd() {
+    const d = surdData[parseInt(document.getElementById('m2-surd-select').value, 10)];
+    const stage = document.getElementById('m2-surd-stage');
+    if (m2SurdOp === 'plus') {
+      stage.innerHTML = `
+        <div class="xray-step"><b>Rationalised Reciprocal:</b> <span class="math">1/<i>a</i> = ${d.inv}</span></div>
+        <div class="xray-step"><b>Add (<span class="math"><i>a</i> + 1/<i>a</i></span>):</b> <span class="math">(${d.p} <span style="text-decoration:line-through;color:var(--red);">${d.q}</span>) + (${d.p} <span style="text-decoration:line-through;color:var(--red);">${d.invq}</span>) = <b style="color:var(--green);">${d.sum}</b></span><br><small>Opposite-sign surds cancel cleanly to <b>0</b>!</small></div>
+        <div class="xray-step"><b>Hence <span class="math"><i>a</i>² + 1/<i>a</i>²</span>:</b> <span class="math">(<i>a</i> + 1/<i>a</i>)² &minus; 2 = (${d.sum})² &minus; 2 = <b style="color:var(--navy);">${d.sq}</b></span></div>
+      `;
+    } else {
+      stage.innerHTML = `
+        <div class="xray-step"><b>Rationalised Reciprocal:</b> <span class="math">1/<i>a</i> = ${d.inv}</span></div>
+        <div class="xray-step"><b>Subtract (<span class="math"><i>a</i> &minus; 1/<i>a</i></span>):</b> <span class="math">(<span style="text-decoration:line-through;color:var(--red);">${d.p}</span> ${d.q}) &minus; (<span style="text-decoration:line-through;color:var(--red);">${d.p}</span> ${d.invq}) = <b style="color:var(--green);">${d.diff}</b></span><br><small>Put brackets around <span class="math">1/<i>a</i></span>! Now the integers cancel and the surds double!</small></div>
+      `;
+    }
+  }
+  document.getElementById('m2-surd-select').addEventListener('change', renderM2Surd);
+  document.getElementById('m2-surd-plus').addEventListener('click', function() {
+    m2SurdOp = 'plus'; this.classList.add('active-toggle');
+    document.getElementById('m2-surd-minus').classList.remove('active-toggle'); renderM2Surd();
+  });
+  document.getElementById('m2-surd-minus').addEventListener('click', function() {
+    m2SurdOp = 'minus'; this.classList.add('active-toggle');
+    document.getElementById('m2-surd-plus').classList.remove('active-toggle'); renderM2Surd();
+  });
+
+  // ==================== MODULE 3 VISUALISERS ====================
+  let m3Axis = 'y';
+  const m3Slider = document.getElementById('m3-coord');
+  function renderM3Coord() {
+    const val = parseInt(m3Slider.value, 10);
+    const px = m3Axis === 'y' ? 0 : val;
+    const py = m3Axis === 'y' ? val : 0;
+    document.getElementById('m3-coord-lbl').textContent = m3Axis === 'y' ? `P = (0, ${val})` : `P = (${val}, 0)`;
+    // Map math (-4..16, -3..16) -> svg (320x260)
+    const sx = x => 58 + x * 13.5;
+    const sy = y => 222 - y * 12.2;
+    const qx = 5, qy = 8;
+    const d2 = (px - qx)*(px - qx) + (py - qy)*(py - qy);
+    const hit = d2 === 50;
+    const rSvgX = Math.sqrt(50) * 13.5, rSvgY = Math.sqrt(50) * 12.2;
+    document.getElementById('m3-coord-svg').innerHTML = `
+      <ellipse cx="${sx(qx)}" cy="${sy(qy)}" rx="${rSvgX}" ry="${rSvgY}" fill="rgba(30,58,138,0.06)" stroke="#93C5FD" stroke-dasharray="4,3" stroke-width="1.5"/>
+      <line x1="15" y1="${sy(0)}" x2="305" y2="${sy(0)}" stroke="${m3Axis==='x'?'#1E3A8A':'#71717A'}" stroke-width="${m3Axis==='x'?3:1.5}"/>
+      <line x1="${sx(0)}" y1="12" x2="${sx(0)}" y2="250" stroke="${m3Axis==='y'?'#1E3A8A':'#71717A'}" stroke-width="${m3Axis==='y'?3:1.5}"/>
+      <text x="296" y="${sy(0)-6}" font-size="11" font-weight="700">X</text>
+      <text x="${sx(0)+7}" y="22" font-size="11" font-weight="700">Y</text>
+      <circle cx="${sx(0)}" cy="${sy(3)}" r="4" fill="#BBF7D0" stroke="#15803D"/>
+      <circle cx="${sx(0)}" cy="${sy(13)}" r="4" fill="#BBF7D0" stroke="#15803D"/>
+      <line x1="${sx(qx)}" y1="${sy(qy)}" x2="${sx(px)}" y2="${sy(py)}" stroke="${hit?'#15803D':'#B45309'}" stroke-width="2.5"/>
+      <circle cx="${sx(qx)}" cy="${sy(qy)}" r="5" fill="#1E3A8A"/>
+      <text x="${sx(qx)+8}" y="${sy(qy)+4}" font-size="12" font-weight="700" fill="#1E3A8A">Q(5, 8)</text>
+      <circle cx="${sx(px)}" cy="${sy(py)}" r="6" fill="${hit?'#15803D':'#B91C1C'}"/>
+      <text x="${sx(px)+9}" y="${sy(py)+4}" font-size="12" font-weight="700" fill="${hit?'#15803D':'#B91C1C'}">P(${px}, ${py})</text>
+    `;
+    document.getElementById('m3-coord-readout').innerHTML = hit
+      ? `<span style="color:var(--green);font-weight:700;">EXACT HIT!</span> At <b>P(${px}, ${py})</b>, distance PQ = &radic;((${px}&minus;5)² + (${py}&minus;8)²) = &radic;50 = <b>5&radic;2</b>! (Try sliding to the <i>other</i> point where the circle cuts the Y-axis: y = 3 and y = 13!)`
+      : `Current <b>P(${px}, ${py})</b> &rarr; PQ = &radic;((${px}&minus;5)² + (${py}&minus;8)²) = &radic;${d2} &approx; ${Math.sqrt(d2).toFixed(2)} (Target: &radic;50 &approx; 7.07 on the Y-axis!).`;
+  }
+  m3Slider.addEventListener('input', renderM3Coord);
+  document.getElementById('m3-axis-y').addEventListener('click', function() {
+    m3Axis = 'y'; m3Slider.value = 13; this.classList.add('active-toggle');
+    document.getElementById('m3-axis-x').classList.remove('active-toggle'); renderM3Coord();
+  });
+  document.getElementById('m3-axis-x').addEventListener('click', function() {
+    m3Axis = 'x'; m3Slider.value = 5; this.classList.add('active-toggle');
+    document.getElementById('m3-axis-y').classList.remove('active-toggle'); renderM3Coord();
+  });
+
+  let m3View = 'lines', m3Shade = 'y', m3PolyWrong = false;
+  function renderM3Graph() {
+    const svg = document.getElementById('m3-graph-svg');
+    const readout = document.getElementById('m3-graph-readout');
+    const sub = document.getElementById('m3-sub-controls');
+    if (m3View === 'lines') {
+      sub.innerHTML = `
+        <button class="btn ${m3Shade==='y'?'active-toggle':''}" id="b-sy">Shade Triangle with Y-Axis (Q4 iii)</button>
+        <button class="btn ${m3Shade==='x'?'active-toggle':''}" id="b-sx">Compare: Triangle with X-Axis</button>
+      `;
+      document.getElementById('b-sy').onclick = () => { m3Shade = 'y'; renderM3Graph(); };
+      document.getElementById('b-sx').onclick = () => { m3Shade = 'x'; renderM3Graph(); };
+      const sx = x => 90 + x * 36;
+      const sy = y => 150 - y * 32;
+      // Line 1: x - 3y = 3 -> (0,-1), (3,0), (6,1)
+      // Line 2: 2x + 3y = 6 -> (0,2), (3,0)
+      const poly = m3Shade === 'y'
+        ? `${sx(0)},${sy(-1)} ${sx(0)},${sy(2)} ${sx(3)},${sy(0)}`
+        : `${sx(3)},${sy(0)} ${sx(3)},${sy(0)}`;
+      svg.innerHTML = `
+        ${m3Shade === 'y' ? `<polygon points="${poly}" fill="rgba(21,128,61,0.18)" stroke="#15803D" stroke-width="2"/>` : ''}
+        <line x1="20" y1="${sy(0)}" x2="325" y2="${sy(0)}" stroke="#52525B" stroke-width="1.8"/>
+        <line x1="${sx(0)}" y1="15" x2="${sx(0)}" y2="235" stroke="#18181B" stroke-width="2.2"/>
+        <line x1="${sx(-1.5)}" y1="${sy(-1.5)}" x2="${sx(6)}" y2="${sy(1)}" stroke="#1E3A8A" stroke-width="2.5"/>
+        <line x1="${sx(-0.8)}" y1="${sy(2.53)}" x2="${sx(4.5)}" y2="${sy(-1)}" stroke="#B45309" stroke-width="2.5"/>
+        <circle cx="${sx(0)}" cy="${sy(2)}" r="4.5" fill="#15803D"/><text x="${sx(0)-42}" y="${sy(2)+4}" font-size="11" font-weight="700">(0, 2)</text>
+        <circle cx="${sx(0)}" cy="${sy(-1)}" r="4.5" fill="#15803D"/><text x="${sx(0)-46}" y="${sy(-1)+4}" font-size="11" font-weight="700">(0, &minus;1)</text>
+        <circle cx="${sx(3)}" cy="${sy(0)}" r="5" fill="#B91C1C"/><text x="${sx(3)+6}" y="${sy(0)-8}" font-size="12" font-weight="700" fill="#B91C1C">(3, 0)</text>
+        <line x1="${sx(0)}" y1="${sy(0)}" x2="${sx(3)}" y2="${sy(0)}" stroke="#15803D" stroke-dasharray="4,3" stroke-width="2"/>
+        <text x="235" y="42" font-size="11" font-weight="700" fill="#1E3A8A">x &minus; 3y = 3</text>
+        <text x="235" y="60" font-size="11" font-weight="700" fill="#B45309">2x + 3y = 6</text>
+      `;
+      readout.innerHTML = m3Shade === 'y'
+        ? `<b>Term-1 Q4(iii):</b> Intersection is <b>(3, 0)</b>. With the <b>Y-axis</b>, vertices are (0, 2), (0, &minus;1), and (3, 0) &rarr; Base along Y-axis = 2 &minus; (&minus;1) = <b>3 units</b>, Height = <b>3 units</b> &rarr; Area = &frac12; &times; 3 &times; 3 = <b>4.5 sq. units</b>!`
+        : `Notice both lines meet right on the X-axis at <b>(3, 0)</b>, so with the X-axis the enclosed area is 0 &mdash; that's why reading carefully (&ldquo;formed with the <b>y-axis</b>&rdquo;) is crucial!`;
+    } else {
+      sub.innerHTML = `
+        <button class="btn ${!m3PolyWrong?'active-toggle':''}" id="b-pr">Correct: Class Midpoints + Zero Anchors</button>
+        <button class="btn ${m3PolyWrong?'warn-toggle':''}" id="b-pw">Trap: Plotting on Class Edges</button>
+      `;
+      document.getElementById('b-pr').onclick = () => { m3PolyWrong = false; renderM3Graph(); };
+      document.getElementById('b-pw').onclick = () => { m3PolyWrong = true; renderM3Graph(); };
+      // Term-1 Q3(i): 35-40(6), 40-45(17), 45-50(30), 50-55(8), 55-60(3)
+      const sx = w => 30 + (w - 30) * 8.2;
+      const sy = f => 215 - f * 5.8;
+      const bars = [[35,40,6],[40,45,17],[45,50,30],[50,55,8],[55,60,3]];
+      const barsSvg = bars.map(([l,u,f]) =>
+        `<rect x="${sx(l)}" y="${sy(f)}" width="${sx(u)-sx(l)}" height="${215-sy(f)}" fill="#F3F4F6" stroke="#D1D5DB"/>`
+      ).join('');
+      const pts = m3PolyWrong
+        ? [[35,0],[35,6],[40,17],[45,30],[50,8],[55,3],[60,0]]
+        : [[32.5,0],[37.5,6],[42.5,17],[47.5,30],[52.5,8],[57.5,3],[62.5,0]];
+      const polyLine = pts.map(([x,y]) => `${sx(x)},${sy(y)}`).join(' ');
+      const dots = pts.map(([x,y]) => `<circle cx="${sx(x)}" cy="${sy(y)}" r="4" fill="${m3PolyWrong?'#B91C1C':'#15803D'}"/>`).join('');
+      svg.innerHTML = `
+        ${barsSvg}
+        <line x1="15" y1="215" x2="330" y2="215" stroke="#18181B" stroke-width="1.8"/>
+        <polyline points="18,215 23,209 27,221 31,215" fill="none" stroke="#18181B" stroke-width="1.6"/>
+        <polyline points="${polyLine}" fill="none" stroke="${m3PolyWrong?'#B91C1C':'#1E3A8A'}" stroke-width="2.6"/>
+        ${dots}
+        ${[32.5,37.5,42.5,47.5,52.5,57.5,62.5].map(m => `<text x="${sx(m)}" y="232" text-anchor="middle" font-size="9.5" fill="#3F3F46">${m}</text>`).join('')}
+      `;
+      readout.innerHTML = m3PolyWrong
+        ? `<span style="color:var(--red);font-weight:700;">Trap:</span> Plotting on lower limits (35, 40, 45&hellip;) shifts the whole polygon left of the histogram bars!`
+        : `<span style="color:var(--green);font-weight:700;">Correct (Full 4/4 Marks):</span> Plot on <b>Class Marks (37.5, 42.5, 47.5, 52.5, 57.5)</b> and close at <b>(32.5, 0)</b> &amp; <b>(62.5, 0)</b> with a kink near the origin!`;
+    }
+  }
+  document.getElementById('m3-view-lines').addEventListener('click', function() {
+    m3View = 'lines'; this.classList.add('active-toggle');
+    document.getElementById('m3-view-poly').classList.remove('active-toggle'); renderM3Graph();
+  });
+  document.getElementById('m3-view-poly').addEventListener('click', function() {
+    m3View = 'poly'; this.classList.add('active-toggle');
+    document.getElementById('m3-view-lines').classList.remove('active-toggle'); renderM3Graph();
+  });
+
+  // ==================== MODULE 4 VISUALISERS ====================
+  const wages = [800, 820, 860, 900, 920, 980, 1000];
+  const wFreq = [7, 14, 19, 25, 20, 10, 5]; // sum = 100, true mean = 891.2
+  const m4Slider = document.getElementById('m4-a');
+  function renderM4Beam() {
+    const A = parseInt(m4Slider.value, 10);
+    document.getElementById('m4-a-val').textContent = A;
+    let sumFD = 0;
+    for (let i = 0; i < wages.length; i++) sumFD += wFreq[i] * (wages[i] - A);
+    const offset = sumFD / 100;
+    const mean = A + offset;
+    const sx = w => 30 + (w - 800) * 1.4;
+    const bars = wages.map((w, i) =>
+      `<rect x="${sx(w)-7}" y="${115 - wFreq[i]*3.2}" width="14" height="${wFreq[i]*3.2}" fill="#DBEAFE" stroke="#1E3A8A"/>` +
+      `<text x="${sx(w)}" y="132" text-anchor="middle" font-size="9.5">${w}</text>`
+    ).join('');
+    document.getElementById('m4-beam-svg').innerHTML = `
+      ${bars}
+      <line x1="20" y1="115" x2="320" y2="115" stroke="#18181B" stroke-width="2.5"/>
+      <!-- True Mean Fulcrum -->
+      <polygon points="${sx(mean)},116 ${sx(mean)-9},138 ${sx(mean)+9},138" fill="#15803D"/>
+      <text x="${sx(mean)}" y="154" text-anchor="middle" font-size="11.5" font-weight="700" fill="#15803D">True Mean = &#8377;891.20</text>
+      <!-- Anchor A -->
+      <line x1="${sx(A)}" y1="18" x2="${sx(A)}" y2="115" stroke="#B45309" stroke-width="2" stroke-dasharray="4,3"/>
+      <circle cx="${sx(A)}" cy="22" r="5" fill="#B45309"/>
+      <text x="${sx(A)}" y="14" text-anchor="middle" font-size="11" font-weight="700" fill="#B45309">A = ${A}</text>
+      <!-- Offset arrow -->
+      <line x1="${sx(A)}" y1="175" x2="${sx(mean)}" y2="175" stroke="#B91C1C" stroke-width="2.5"/>
+      <text x="170" y="195" text-anchor="middle" font-size="11.5" font-weight="700" fill="#18181B">A (${A}) + Offset (${offset >= 0 ? '+' : ''}${offset.toFixed(1)}) = &#8377;${mean.toFixed(2)}</text>
+    `;
+    document.getElementById('m4-beam-readout').innerHTML =
+      `With <b>A = ${A}</b>: &Sigma;f<sub>i</sub>d<sub>i</sub> = <b>${sumFD}</b> &rarr; Offset = ${sumFD}/100 = <b>${offset.toFixed(1)}</b>.<br>` +
+      `<b>Mean = A + Offset = ${A} + (${offset.toFixed(1)}) = <span style="color:var(--green);">&#8377;891.20</span></b> &mdash; always inside [800, 1000]!`;
+  }
+  m4Slider.addEventListener('input', renderM4Beam);
+
+  let m4Semi = true;
+  function renderM4CI() {
+    const t = parseFloat(document.getElementById('m4-ci-time').value);
+    const P = t === 1.5 ? 1000 : (t === 1 ? 20000 : 10000);
+    const R = t === 1 ? 10 : 20;
+    const svg = document.getElementById('m4-ci-svg');
+    const readout = document.getElementById('m4-ci-readout');
+    const months = t * 12;
+    const hops = m4Semi ? (t * 2) : t;
+    const stepRate = m4Semi ? (R / 2) : R;
+    let nodes = '';
+    if (m4Semi || Number.isInteger(hops)) {
+      const n = hops;
+      for (let i = 0; i <= n; i++) {
+        const x = 35 + (270 * i / n);
+        const amt = Math.round(P * Math.pow(1 + stepRate/100, i));
+        nodes += `<circle cx="${x}" cy="90" r="6" fill="#1E3A8A"/>`;
+        nodes += `<text x="${x}" y="114" text-anchor="middle" font-size="10.5" font-weight="700">${i*(months/n)}m</text>`;
+        nodes += `<text x="${x}" y="132" text-anchor="middle" font-size="10" fill="#15803D">&#8377;${amt}</text>`;
+        if (i < n) {
+          const nx = 35 + (270 * (i+1) / n);
+          nodes += `<path d="M ${x+6} 85 Q ${(x+nx)/2} 42 ${nx-6} 85" fill="none" stroke="#B45309" stroke-width="2"/>`;
+          nodes += `<text x="${(x+nx)/2}" y="52" text-anchor="middle" font-size="10.5" font-weight="700" fill="#B45309">+${stepRate}%</text>`;
+        }
+      }
+      const finalAmt = Math.round(P * Math.pow(1 + stepRate/100, n));
+      svg.innerHTML = `<line x1="35" y1="90" x2="305" y2="90" stroke="#71717A" stroke-width="2"/>${nodes}`;
+      readout.innerHTML = `<b>${m4Semi ? 'Semi-Annual' : 'Annual'} for ${t} yr(s) at ${R}% p.a.:</b> <b>n = ${n} hops</b> at <b>${stepRate}% per hop</b> &rarr; A = ${P}(1 + ${stepRate}/100)<sup>${n}</sup> = <b>&#8377;${finalAmt}</b>.`;
+    } else {
+      // Annual for 1.5 yrs: 1 full yr at 20% + 0.5 yr at 10%
+      const a1 = P * (1 + R/100);
+      const a2 = a1 * (1 + R/200);
+      svg.innerHTML = `
+        <line x1="35" y1="90" x2="305" y2="90" stroke="#71717A" stroke-width="2"/>
+        <circle cx="35" cy="90" r="6" fill="#1E3A8A"/><text x="35" y="115" text-anchor="middle" font-size="10.5">0m (&#8377;${P})</text>
+        <circle cx="215" cy="90" r="6" fill="#1E3A8A"/><text x="215" y="115" text-anchor="middle" font-size="10.5">12m (&#8377;${a1})</text>
+        <circle cx="305" cy="90" r="6" fill="#1E3A8A"/><text x="305" y="115" text-anchor="middle" font-size="10.5">18m (&#8377;${a2})</text>
+        <path d="M 41 85 Q 125 40 209 85" fill="none" stroke="#B91C1C" stroke-width="2"/><text x="125" y="52" text-anchor="middle" font-size="10.5" fill="#B91C1C">+20% (1 yr)</text>
+        <path d="M 221 85 Q 260 55 299 85" fill="none" stroke="#B91C1C" stroke-width="2"/><text x="260" y="58" text-anchor="middle" font-size="10.5" fill="#B91C1C">+10% (&frac12; yr)</text>
+      `;
+      readout.innerHTML = `<span style="color:var(--red);font-weight:700;">Annual Compounding for 1&frac12; yrs</span> gives &#8377;${a2} (only 2 unequal hops). Switching back to <b>Semi-Annual</b> gives 3 equal +10% hops = <b>&#8377;1331</b>!`;
+    }
+  }
+  document.getElementById('m4-ci-time').addEventListener('change', renderM4CI);
+  document.getElementById('m4-ci-semi').addEventListener('click', function() {
+    m4Semi = true; this.classList.add('active-toggle');
+    document.getElementById('m4-ci-ann').classList.remove('active-toggle'); renderM4CI();
+  });
+  document.getElementById('m4-ci-ann').addEventListener('click', function() {
+    m4Semi = false; this.classList.add('active-toggle');
+    document.getElementById('m4-ci-semi').classList.remove('active-toggle'); renderM4CI();
+  });
+
+  // ==================== MODULE 5 VISUALISERS ====================
+  let m5Radar = true;
+  const m5Ang = document.getElementById('m5-ang');
+  function renderM5Rhom() {
+    const theta = parseInt(m5Ang.value, 10);
+    document.getElementById('m5-ang-val').textContent = theta;
+    const rad = theta * Math.PI / 180;
+    const L = 92;
+    const Px = 55, Py = 215;
+    const Qx = Px + L, Qy = Py;
+    const Sx = Px + L * Math.cos(rad), Sy = Py - L * Math.sin(rad);
+    const Rx = Qx + L * Math.cos(rad), Ry = Qy - L * Math.sin(rad);
+    // Equilateral SRT above SR (opposite side from Q): vector SR = (L, 0), so T is at midpoint of SR + (0, -L*sqrt(3)/2)
+    const Tx = (Sx + Rx) / 2, Ty = Sy - L * Math.sqrt(3) / 2;
+    const rqs = (180 - theta) / 2;
+    const qrt = theta + 60;
+    const rqt = (180 - qrt) / 2;
+    const sqt = rqs - rqt; // ALWAYS 30!
+    const hiStroke = m5Radar ? '#B91C1C' : '#18181B';
+    const hiW = m5Radar ? 3.4 : 2;
+    document.getElementById('m5-rhom-svg').innerHTML = `
+      ${m5Radar ? `<polygon points="${Qx},${Qy} ${Rx},${Ry} ${Tx},${Ty}" fill="rgba(254,243,199,0.65)" stroke="none"/>` : ''}
+      <polygon points="${Px},${Py} ${Qx},${Qy} ${Rx},${Ry} ${Sx},${Sy}" fill="none" stroke="#18181B" stroke-width="2"/>
+      <polygon points="${Sx},${Sy} ${Rx},${Ry} ${Tx},${Ty}" fill="none" stroke="#18181B" stroke-width="2"/>
+      <!-- Highlight RQ, RS, RT -->
+      <line x1="${Qx}" y1="${Qy}" x2="${Rx}" y2="${Ry}" stroke="${hiStroke}" stroke-width="${hiW}"/>
+      <line x1="${Sx}" y1="${Sy}" x2="${Rx}" y2="${Ry}" stroke="${hiStroke}" stroke-width="${hiW}"/>
+      <line x1="${Rx}" y1="${Ry}" x2="${Tx}" y2="${Ty}" stroke="${hiStroke}" stroke-width="${hiW}"/>
+      <line x1="${Sx}" y1="${Sy}" x2="${Qx}" y2="${Qy}" stroke="#1E3A8A" stroke-dasharray="4,3" stroke-width="1.8"/>
+      <line x1="${Tx}" y1="${Ty}" x2="${Qx}" y2="${Qy}" stroke="#15803D" stroke-width="2.2"/>
+      <text x="${Px-14}" y="${Py+6}" font-size="13" font-weight="700">P</text>
+      <text x="${Qx+8}" y="${Qy+6}" font-size="13" font-weight="700">Q</text>
+      <text x="${Rx+8}" y="${Ry+4}" font-size="13" font-weight="700">R</text>
+      <text x="${Sx-15}" y="${Sy+4}" font-size="13" font-weight="700">S</text>
+      <text x="${Tx}" y="${Ty-8}" text-anchor="middle" font-size="13" font-weight="700">T</text>
+      <text x="${Px+24}" y="${Py-8}" font-size="11.5" font-weight="700" fill="#1E3A8A">${theta}&deg;</text>
+    `;
+    document.getElementById('m5-rhom-readout').innerHTML =
+      `1. In rhombus PQRS: <span class="math">&angle;QRS = ${theta}&deg;</span> and <span class="math">&angle;RQS = (180&deg;&minus;${theta}&deg;)/2 = <b>${rqs}&deg;</b></span>.<br>` +
+      `2. <b>Equal-Side Radar:</b> <span style="color:var(--red);font-weight:700;">RQ = RS = RT</span> &rArr; <span class="math">&triangle;RQT</span> is <b>isosceles</b> with apex <span class="math">&angle;QRT = ${theta}&deg; + 60&deg; = ${qrt}&deg;</span>!<br>` +
+      `3. Therefore <b>&angle;RQT</b> = (180&deg;&minus;${qrt}&deg;)/2 = <b>${rqt}&deg;</b>, and <b>&angle;SQT</b> = ${rqs}&deg; &minus; ${rqt}&deg; = <b style="color:var(--green);">${sqt}&deg;</b> (always 30&deg;!).`;
+  }
+  m5Ang.addEventListener('input', renderM5Rhom);
+  document.getElementById('m5-radar-btn').addEventListener('click', function() {
+    m5Radar = !m5Radar; this.classList.toggle('active-toggle', m5Radar); renderM5Rhom();
+  });
+
+  const m5Mid = document.getElementById('m5-mid');
+  function renderM5Mid() {
+    const bAng = parseInt(m5Mid.value, 10);
+    document.getElementById('m5-mid-val').textContent = bAng;
+    const rad = (180 - bAng) * Math.PI / 180; // interior direction from B(130,155)
+    const Bx = 135, By = 155, Cx = 295, Cy = 155;
+    const Ax = Bx - 110 * Math.cos(bAng * Math.PI / 180), Ay = By - 110 * Math.sin(bAng * Math.PI / 180);
+    // Wait: interior angle at B between BA and BC is bAng: vector BC = (+1, 0), so vector BA is at angle bAng counter-clockwise => (cos bAng, -sin bAng) in SVG!
+    const Ax2 = Bx + 120 * Math.cos(bAng * Math.PI / 180);
+    const Ay2 = By - 120 * Math.sin(bAng * Math.PI / 180);
+    const Dx = (Ax2 + Bx)/2, Dy = (Ay2 + By)/2;
+    const Ex = (Ax2 + Cx)/2, Ey = (Ay2 + Cy)/2;
+    const bde = 180 - bAng;
+    document.getElementById('m5-mid-svg').innerHTML = `
+      <polygon points="${Ax2},${Ay2} ${Bx},${By} ${Cx},${Cy}" fill="#FAF9F5" stroke="#18181B" stroke-width="2"/>
+      <line x1="${Dx}" y1="${Dy}" x2="${Ex}" y2="${Ey}" stroke="#1E3A8A" stroke-width="3"/>
+      <line x1="${Bx}" y1="${By}" x2="${Cx}" y2="${Cy}" stroke="#1E3A8A" stroke-width="3"/>
+      <circle cx="${Dx}" cy="${Dy}" r="4" fill="#B91C1C"/>
+      <circle cx="${Ex}" cy="${Ey}" r="4" fill="#B91C1C"/>
+      <text x="${Ax2}" y="${Ay2-7}" text-anchor="middle" font-size="12" font-weight="700">A</text>
+      <text x="${Bx-12}" y="${By+12}" font-size="12" font-weight="700">B</text>
+      <text x="${Cx+8}" y="${Cy+12}" font-size="12" font-weight="700">C</text>
+      <text x="${Dx-14}" y="${Dy+4}" font-size="12" font-weight="700" fill="#B91C1C">D</text>
+      <text x="${Ex+8}" y="${Ey+4}" font-size="12" font-weight="700" fill="#B91C1C">E</text>
+      <text x="${Bx+22}" y="${By-7}" font-size="11.5" font-weight="700" fill="#B45309">${bAng}&deg;</text>
+      <text x="${Dx+20}" y="${Dy+14}" font-size="11.5" font-weight="700" fill="#15803D">${bde}&deg;</text>
+    `;
+    document.getElementById('m5-mid-readout').innerHTML =
+      `Since D and E are midpoints, <b>DE &parallel; BC</b> (Midpoint Theorem). Angles <span class="math">&angle;BDE</span> and <span class="math">&angle;DBC</span> form a <b>C-pattern (co-interior)</b> &rArr; <span class="math">&angle;BDE = 180&deg; &minus; ${bAng}&deg; = <b style="color:var(--green);">${bde}&deg;</b></span> (NOT ${bAng/2}&deg;!).`;
+  }
+  m5Mid.addEventListener('input', renderM5Mid);
+
+  // ==================== 20 DIAGNOSTIC QUIZ QUESTIONS ====================
+  const quizzes = {
+    mod1: [
+      { id: 'm1q1', stem: 'Expand completely: (5 − 3x)²', opts: ['25 + 9x²', '25 − 9x²', '25 − 30x + 9x²', '25 − 15x + 9x²'], ans: 2, ok: 'Spot on! First² − 2(5)(3x) + Second² = 25 − 30x + 9x².', err: 'Watch the middle term! −2ab = −2(5)(3x) = −30x.' },
+      { id: 'm1q2', stem: 'If √(k² + 36) = 10, what is the FIRST valid step to solve for k?', opts: ['k + 6 = 10', 'k² + 36 = 100', 'k² + 6 = 100', 'k = 10 − √36'], ans: 1, ok: 'Exactly! Square BOTH sides: k² + 36 = 100 ⇒ k² = 64 ⇒ k = ±8.', err: 'Trap alert! Square roots NEVER split across +. Square both sides first: k² + 36 = 10².' },
+      { id: 'm1q3', stem: 'Simplify √20 into simplest surd form:', opts: ['4√5', '2√5', '5√2', '10'], ans: 1, ok: 'Right! √20 = √(4 × 5) = √4 × √5 = 2√5 (fixes Term-1 Q7 ii!).', err: 'Remember √4 = 2 (not 4!), so √(4 × 5) = 2√5.' },
+      { id: 'm1q4', stem: 'In a right triangle with legs x and (x + 2) and hypotenuse (x + 4), Pythagoras gives:', opts: ['x² + x² + 4 = x² + 16', 'x² + (x² + 4x + 4) = x² + 8x + 16', 'x + (x + 2) = x + 4', 'x² + 2x + 4 = x² + 4x + 16'], ans: 1, ok: 'Nailed it! Both (x+2)² and (x+4)² keep their 2ab terms: 4x and 8x.', err: 'Include 2ab on BOTH binomial squares: (x+2)² = x²+4x+4 and (x+4)² = x²+8x+16.' }
+    ],
+    mod2: [
+      { id: 'm2q1', stem: 'In (x² + y² − z²)² − 9x²y², what is the right first rewrite?', opts: ['Expand (x² + y² − z²)² into 6 terms', '(x² + y² − z²)² − (3xy)²', '(x + y − z)² − (3xy)²', '(x² + y² − z² − 9xy)(x² + y² − z² + 9xy)'], ans: 1, ok: 'Yes! Spot A² − B² with A = x²+y²−z² and B = 3xy.', err: 'Never expand the big trinomial! Write 9x²y² as (3xy)² to unlock A² − B².' },
+      { id: 'm2q2', stem: 'Which is the correct SOAP identity for a³ + b³?', opts: ['(a + b)(a² + ab + b²)', '(a + b)(a² − 2ab + b²)', '(a + b)(a² − ab + b²)', '(a − b)(a² + ab + b²)'], ans: 2, ok: 'Correct! Same (+), Opposite (−), Always Plus (+), and single ab!', err: 'Use SOAP: (a + b)(a² − ab + b²) — opposite sign on −ab, and NEVER 2ab!' },
+      { id: 'm2q3', stem: 'If a = 4 − √15, then 1/a = 4 + √15. What is a + 1/a?', opts: ['8 − 2√15', '8 + 2√15', '8', '2√15'], ans: 2, ok: 'Clean! (4 − √15) + (4 + √15) = 8 because −√15 and +√15 cancel.', err: '−√15 + √15 = 0! Only 4 + 4 = 8 survives.' },
+      { id: 'm2q4', stem: 'To factorise (x − 2)² − 6xy + 12y − 16y², group the middle two terms as:', opts: ['−6y(x + 2)', '−6y(x − 2)', '+6y(x − 2)', '−6xy(1 − 2)'], ans: 1, ok: 'Spot on! −6y(x − 2) = −6xy + 12y, revealing the repeated chunk U = (x − 2)!', err: 'Watch the negative sign: factoring −6y out of (+12y) leaves −2, giving −6y(x − 2)!' }
+    ],
+    mod3: [
+      { id: 'm3q1', stem: 'Any point lying on the Y-axis MUST have coordinates of the form:', opts: ['(k, 0)', '(0, y)', '(y, y)', '(1, y)'], ans: 1, ok: 'Locked in! On the Y-axis, horizontal shift x = 0 ⇒ (0, y).', err: '(k, 0) lies on the X-axis! On the Y-axis, x is always 0 ⇒ (0, y).' },
+      { id: 'm3q2', stem: 'For class intervals 20–30, 30–40, 40–50, at what x-values are frequency polygon points plotted?', opts: ['20, 30, 40 (lower limits)', '30, 40, 50 (upper limits)', '25, 35, 45 (class marks, anchored at 15 & 55)', '10, 20, 30'], ans: 2, ok: 'Exactly! Class midpoints 25, 35, 45 plus zero-frequency anchors at 15 and 55.', err: 'Always plot Frequency Polygons at Class Marks = (Lower + Upper)/2, anchored one class outside both ends.' },
+      { id: 'm3q3', stem: 'Point B lies on the x-axis with abscissa 11. What are the coordinates of B?', opts: ['(0, 11)', '(11, 0)', '(11, 11)', '(−11, 0)'], ans: 1, ok: 'Right! Abscissa = x-coordinate = 11, and on the x-axis y = 0 ⇒ (11, 0).', err: 'Abscissa means x-coordinate, and on the x-axis y = 0 ⇒ (11, 0).' },
+      { id: 'm3q4', stem: 'Two lines meet at (4, 1) and cut the Y-axis at (0, 5) and (0, −1). What is the area of the triangle formed with the Y-axis?', opts: ['24 sq. units', '12 sq. units', '8 sq. units', '6 sq. units'], ans: 1, ok: 'Great! Base on Y-axis = 5 − (−1) = 6, height = x-coord = 4 ⇒ ½ × 6 × 4 = 12 sq. units.', err: 'Base along Y-axis = 5 − (−1) = 6 units; perpendicular height from (4, 1) to Y-axis = 4 units ⇒ ½ × 6 × 4 = 12.' }
+    ],
+    mod4: [
+      { id: 'm4q1', stem: 'With Assumed Mean A = 600, Σfᵢ = 50, and Σfᵢdᵢ = −150, what is the arithmetic mean?', opts: ['−3', '603', '597', '450'], ans: 2, ok: 'Boom! Mean = A + (−150/50) = 600 − 3 = 597.', err: 'Never forget A + ! Mean = 600 + (−150/50) = 600 − 3 = 597.' },
+      { id: 'm4q2', stem: 'Rs. 1,000 is invested for 1½ years at R% p.a. compounded semi-annually. What is the formula for Amount?', opts: ['1000(1 + R/100)³', '1000(1 + R/200)³', '1000(1 + R/200)²', '1000(1 + R/100)(1 + R/200)'], ans: 1, ok: 'Spot on! 3 half-years, each at (R/2)% ⇒ 1000(1 + R/200)³.', err: 'Semi-annual for 1½ years = 3 six-month periods at rate (R/2)% = R/200.' },
+      { id: 'm4q3', stem: 'Evaluate completely: log₂ √6 + log₂ √(2/3)', opts: ['log₂ 4 = 2', 'log₂ √4 = 1', '√4 = 2', '0'], ans: 1, ok: 'Finished to the last line! log₂ √(6 × 2/3) = log₂ √4 = log₂ 2 = 1.', err: '√(6 × 2/3) = √4 = 2, and log₂ 2 = 1 (ask: 2 to what power gives 2?).' },
+      { id: 'm4q4', stem: 'What is the LCM of 400 and 2500 (from Term-1 Q2 ii: 309x/2500 − 41x/400)?', opts: ['5,000', '10,000', '1,00,000', '2,500'], ans: 1, ok: 'Easy trick! Pull out 100: LCM(4, 25) = 100 ⇒ 100 × 100 = 10,000.', err: 'Factor out 100 first: 400 = 100×4 and 2500 = 100×25. Since LCM(4,25)=100, LCM = 10,000!' }
+    ],
+    mod5: [
+      { id: 'm5q1', stem: 'In △ABC, D and E are midpoints of AB and AC. If ∠DBC = 140°, what is ∠BDE?', opts: ['70°', '140°', '40°', '50°'], ans: 2, ok: 'Yes! DE ∥ BC ⇒ co-interior angles add to 180°: 180° − 140° = 40°.', err: 'DE ∥ BC makes a C-angle (co-interior), so ∠BDE + ∠DBC = 180° ⇒ 40° (never divide by 2!).' },
+      { id: 'm5q2', stem: 'In Rhombus PQRS + Equilateral △RST (opposite Q), why is △RQT isosceles?', opts: ['Because PQ ∥ SR', 'Because RQ = RS (rhombus) and RT = RS (equilateral), so RQ = RT', 'Because ∠SPQ = 90°', 'Because QT bisects ∠R'], ans: 1, ok: 'That is the master key! Both RQ and RT equal the shared side RS.', err: 'Look at shared side RS: RQ = RS (rhombus) and RT = RS (equilateral), forcing RQ = RT!' },
+      { id: 'm5q3', stem: 'After substituting u = 1/x in 4/x + 3y = 14, suppose you find u = 5. What is x?', opts: ['5', '−5', '1/5', '14/5'], ans: 2, ok: 'Great catch! Always invert u = 1/x back to x = 1/5 on the final line.', err: 'Don’t stop at u = 5! Since u = 1/x, x = 1/u = 1/5.' },
+      { id: 'm5q4', stem: 'To solve 7u + 8v = 2 and 2u + 12v = 20 by the standard cross-multiplication formula, write c₁ and c₂ as:', opts: ['c₁ = 2, c₂ = 20', 'c₁ = −2, c₂ = −20 (bringing all terms to LHS = 0)', 'c₁ = 7, c₂ = 2', 'c₁ = 1/2, c₂ = 1/20'], ans: 1, ok: '100%! Always move constants to LHS (= 0) first so signs never flip.', err: 'Standard cross-multiplication requires a₁u + b₁v + c₁ = 0, so c₁ = −2 and c₂ = −20!' }
+    ]
+  };
+
+  function updateProgressUI() {
+    let totalSolved = 0;
+    ['mod1','mod2','mod3','mod4','mod5'].forEach(mod => {
+      const cnt = quizzes[mod].filter(q => state.solved[q.id]).length;
+      totalSolved += cnt;
+      const badge = document.getElementById('badge-' + mod);
+      if (badge) badge.textContent = cnt + '/4';
+    });
+    document.getElementById('solvedCount').textContent = totalSolved;
+    document.getElementById('solvedBar').style.width = (totalSolved / 20 * 100) + '%';
+  }
+
+  Object.keys(quizzes).forEach(mod => {
+    const container = document.getElementById('quiz-' + mod);
+    quizzes[mod].forEach((q, idx) => {
+      const card = document.createElement('div');
+      card.className = 'q-card';
+      card.innerHTML = `<div class="q-stem">${idx + 1}. ${q.stem}</div><div class="q-opts"></div><div class="q-feedback"></div>`;
+      const optsWrap = card.querySelector('.q-opts');
+      const fb = card.querySelector('.q-feedback');
+      q.opts.forEach((optText, oi) => {
+        const b = document.createElement('button');
+        b.className = 'q-opt';
+        b.textContent = `(${String.fromCharCode(97 + oi)}) ${optText}`;
+        if (state.solved[q.id] && oi === q.ans) {
+          b.classList.add('correct');
+          fb.className = 'q-feedback show ok';
+          fb.textContent = q.ok;
+        }
+        b.addEventListener('click', () => {
+          optsWrap.querySelectorAll('.q-opt').forEach(el => el.classList.remove('correct', 'wrong'));
+          if (oi === q.ans) {
+            b.classList.add('correct');
+            fb.className = 'q-feedback show ok';
+            fb.textContent = q.ok;
+            state.solved[q.id] = true;
+            saveState();
+            updateProgressUI();
+          } else {
+            b.classList.add('wrong');
+            fb.className = 'q-feedback show err';
+            fb.textContent = q.err;
+          }
+        });
+        optsWrap.appendChild(b);
+      });
+      container.appendChild(card);
+    });
+  });
+
+  // ==================== MODULE 6 TIMER & PERSISTENCE ====================
+  let timerTotal = 90 * 60, timerRem = 90 * 60, timerId = null;
+  const tDisp = document.getElementById('timer-display');
+  const tLbl = document.getElementById('timer-mode-lbl');
+  const tStart = document.getElementById('timer-start');
+  function fmtTime(s) {
+    const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
+    return [h, m, sec].map(v => String(v).padStart(2, '0')).join(':');
+  }
+  function stopTimer() { if (timerId) { clearInterval(timerId); timerId = null; } tStart.textContent = 'Start'; }
+  document.getElementById('timer-10m').onclick = function() {
+    stopTimer(); timerTotal = timerRem = 10 * 60; tDisp.textContent = fmtTime(timerRem);
+    tLbl.textContent = '10-Minute Reading Time — Pen Down! Choose 2 Section B Questions';
+    this.classList.add('active-toggle'); document.getElementById('timer-90m').classList.remove('active-toggle');
+  };
+  document.getElementById('timer-90m').onclick = function() {
+    stopTimer(); timerTotal = timerRem = 90 * 60; tDisp.textContent = fmtTime(timerRem);
+    tLbl.textContent = '90-Minute Paper Writing Timer (40 Marks)';
+    this.classList.add('active-toggle'); document.getElementById('timer-10m').classList.remove('active-toggle');
+  };
+  tStart.onclick = function() {
+    if (timerId) { stopTimer(); return; }
+    tStart.textContent = 'Pause';
+    timerId = setInterval(() => {
+      if (timerRem > 0) { timerRem--; tDisp.textContent = fmtTime(timerRem); }
+      else { stopTimer(); tLbl.textContent = 'Time Up! Take 2 mins to check units & A + offset.'; }
+    }, 1000);
+  };
+  document.getElementById('timer-reset').onclick = () => { stopTimer(); timerRem = timerTotal; tDisp.textContent = fmtTime(timerRem); };
+
+  ['p1','p2','p3'].forEach(k => {
+    const inp = document.getElementById('score-' + k);
+    if (state.scores[k] !== undefined) inp.value = state.scores[k];
+    inp.addEventListener('input', () => { state.scores[k] = inp.value; saveState(); });
+  });
+  document.querySelectorAll('.audit-cb').forEach(cb => {
+    cb.checked = !!state.checks[cb.dataset.id];
+    cb.addEventListener('change', () => { state.checks[cb.dataset.id] = cb.checked; saveState(); });
+  });
+
+  // Initial render of all visualisers
+  renderM1Area(); renderM1Tri();
+  renderM2Xray(); renderM2Surd();
+  renderM3Coord(); renderM3Graph();
+  renderM4Beam(); renderM4CI();
+  renderM5Rhom(); renderM5Mid();
+  updateProgressUI();
+})();
+</script>
+</body>
+</html>
